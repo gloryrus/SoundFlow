@@ -1,0 +1,5 @@
+INSTRUMENTATION_RESULT: diagnostic=requests=1 last=NOT_STARTED pageReady=false class=com.farika.soundflow.WriterCases$FixtureActivity
+INSTRUMENTATION_RESULT: checks=0
+INSTRUMENTATION_RESULT: failure=AssertionError like_browser_completed_or_denied
+INSTRUMENTATION_RESULT: page_url=https://soundcloud.com/you/likes
+INSTRUMENTATION_CODE: 0

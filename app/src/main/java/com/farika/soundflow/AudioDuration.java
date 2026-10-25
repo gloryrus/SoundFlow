@@ -1,0 +1,8 @@
+package com.farika.soundflow;
+import android.media.*;import androidx.media3.datasource.*;import android.net.Uri;import java.io.*;
+/** Reads only the committed local file/cache. Never contacts the network. */
+final class AudioDuration {
+ static long file(File f)throws Exception{MediaMetadataRetriever r=new MediaMetadataRetriever();try{r.setDataSource(f.getAbsolutePath());return parse(r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));}finally{r.release();}}
+ static long cache(DataSource.Factory factory,String url)throws Exception{MediaMetadataRetriever r=new MediaMetadataRetriever();MediaDataSource source=new MediaDataSource(){long size=-1;public int readAt(long position,byte[] buffer,int offset,int length)throws IOException{DataSource d=factory.createDataSource();try{long remaining=d.open(new DataSpec.Builder().setUri(Uri.parse(url)).setPosition(position).build());if(remaining>=0)size=position+remaining;return d.read(buffer,offset,length);}catch(androidx.media3.datasource.DataSourceException e){if(e.reason==androidx.media3.common.PlaybackException.ERROR_CODE_IO_READ_POSITION_OUT_OF_RANGE)return -1;throw e;}finally{d.close();}}public long getSize()throws IOException{if(size>=0)return size;DataSource d=factory.createDataSource();try{return size=d.open(new DataSpec.Builder().setUri(url).build());}finally{d.close();}}public void close(){}};try{r.setDataSource(source);return parse(r.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));}finally{r.release();source.close();}}
+ static long parse(String s){try{return Long.parseLong(s);}catch(Exception e){return 0;}}
+}

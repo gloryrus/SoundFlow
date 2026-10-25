@@ -1,0 +1,5 @@
+Starting: Intent { cmp=com.farika.soundflow/com.farika.soundflow.MainActivity }
+Status: timeout
+Activity: com.farika.soundflow/com.farika.soundflow.MainActivity
+WaitTime: 12393
+Complete

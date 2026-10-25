@@ -1,0 +1,24 @@
+com.farika.soundflow.ClearStreamCacheTest: 12 tests; 0 failures/errors/skipped
+com.farika.soundflow.FlowRegressionTest: 24 tests; 0 failures/errors/skipped
+com.farika.soundflow.FlowUiTest: 4 tests; 0 failures/errors/skipped
+com.farika.soundflow.LeanMemory166Test: 17 tests; 0 failures/errors/skipped
+com.farika.soundflow.LeanUi166Test: 5 tests; 0 failures/errors/skipped
+com.farika.soundflow.LibraryPagerTest: 8 tests; 0 failures/errors/skipped
+com.farika.soundflow.LibraryPlayer163Test: 20 tests; 0 failures/errors/skipped
+com.farika.soundflow.LibraryUi163Test: 7 tests; 0 failures/errors/skipped
+com.farika.soundflow.ListControlsTest: 7 tests; 0 failures/errors/skipped
+com.farika.soundflow.LocalAudio168Test: 21 tests; 0 failures/errors/skipped
+com.farika.soundflow.LocalPlayer168Test: 6 tests; 0 failures/errors/skipped
+com.farika.soundflow.LocalProbe168Test: 8 tests; 0 failures/errors/skipped
+com.farika.soundflow.LocalUi168Test: 7 tests; 0 failures/errors/skipped
+com.farika.soundflow.MemoryGestures164Test: 18 tests; 0 failures/errors/skipped
+com.farika.soundflow.MemoryUi164Test: 7 tests; 0 failures/errors/skipped
+com.farika.soundflow.Notification167Test: 20 tests; 0 failures/errors/skipped
+com.farika.soundflow.QueueStartupTest: 15 tests; 0 failures/errors/skipped
+com.farika.soundflow.QuietChecks165Test: 25 tests; 0 failures/errors/skipped
+com.farika.soundflow.SoundFlow170Test: 11 tests; 0 failures/errors/skipped
+com.farika.soundflow.SwipeDispatchTest: 9 tests; 0 failures/errors/skipped
+com.farika.soundflow.UiPressure167Test: 3 tests; 0 failures/errors/skipped
+com.farika.soundflow.WarmWriterTest: 14 tests; 0 failures/errors/skipped
+com.farika.soundflow.WaveCatalog170Test: 7 tests; 0 failures/errors/skipped
+TOTAL 275; FAILURES 0; ERRORS 0; SKIPPED 0

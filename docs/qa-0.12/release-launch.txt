@@ -1,0 +1,7 @@
+Starting: Intent { cmp=com.farika.soundflow/com.farika.soundflow.MainActivity }
+Status: ok
+Activity: com.farika.soundflow/com.farika.soundflow.MainActivity
+ThisTime: 3146
+TotalTime: 3146
+WaitTime: 3386
+Complete

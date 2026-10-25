@@ -1,0 +1,46 @@
+{
+  "id": 302790498,
+  "title": "Король И Шут - Марионетки(Cover)",
+  "downloadable": true,
+  "streamable": true,
+  "policy": "MONETIZE",
+  "duration": 211089,
+  "full_duration": 211115,
+  "formats": [
+    {
+      "snipped": false,
+      "duration": 211089,
+      "quality": "sq",
+      "format": {
+        "protocol": "hls",
+        "mime_type": "audio/mp4; codecs=\"mp4a.40.2\""
+      }
+    },
+    {
+      "snipped": false,
+      "duration": 211089,
+      "quality": "lq",
+      "format": {
+        "protocol": "hls",
+        "mime_type": "audio/mp4; codecs=\"mp4a.40.2\""
+      }
+    },
+    {
+      "snipped": false,
+      "duration": 211089,
+      "quality": "sq",
+      "format": {
+        "protocol": "hls",
+        "mime_type": "audio/mpegurl"
+      }
+    }
+  ],
+  "manifest_check": {
+    "hls": true,
+    "endlist": true,
+    "segments": 22,
+    "encryption_tags": [],
+    "duration_seconds": 211.08969499999998
+  },
+  "original_endpoint_anonymous": "HTTP 401"
+}

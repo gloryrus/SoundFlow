@@ -1,0 +1,23 @@
+<resources>
+ <style name="AppTheme" parent="android:style/Theme.Material.NoActionBar">
+  <item name="android:colorBackground">#171D27</item>
+  <item name="android:colorButtonNormal">#222B38</item>
+  <item name="android:textColorPrimary">#F4F7FC</item>
+  <item name="android:textColorSecondary">#A5B0C2</item>
+  <item name="android:alertDialogTheme">@style/SoundFlowDialog</item>
+  <item name="android:fontFamily">sans</item>
+  <item name="android:colorAccent">#C2F578</item>
+  <item name="android:windowLightStatusBar">false</item>
+  <item name="android:statusBarColor">#0B0E14</item>
+  <item name="android:navigationBarColor">#0B0E14</item>
+  <item name="android:windowActionModeOverlay">true</item>
+  <item name="android:windowBackground">#0B0E14</item>
+ </style>
+ <style name="SoundFlowDialog" parent="android:style/Theme.Material.Dialog.Alert">
+  <item name="android:colorAccent">#C2F578</item>
+  <item name="android:colorBackgroundFloating">#171D27</item>
+  <item name="android:textColorPrimary">#F4F7FC</item>
+  <item name="android:textColorSecondary">#A5B0C2</item>
+  <item name="android:windowBackground">@drawable/dialog_surface</item>
+ </style>
+</resources>

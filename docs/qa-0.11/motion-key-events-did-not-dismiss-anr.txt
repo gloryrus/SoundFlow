@@ -1,0 +1,2 @@
+INSTRUMENTATION_RESULT: failure=RuntimeException: java.lang.AssertionError: wave_bars_animate_during_playback phase=0.0 now=0.0 focus=false shown=true playing=true enabled=true
+INSTRUMENTATION_CODE: 0

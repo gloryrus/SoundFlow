@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.farika.soundflow.WarmWriterTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-24T22:52:29" hostname="85afb0ec-449" time="0.922">
+  <properties/>
+  <testcase name="signedOutWarmDoesNothing" classname="com.farika.soundflow.WarmWriterTest" time="0.204"/>
+  <testcase name="duplicateTapDoesNotDoubleWrite" classname="com.farika.soundflow.WarmWriterTest" time="0.173"/>
+  <testcase name="secondOperationReusesOnePageAndUsesNewArguments" classname="com.farika.soundflow.WarmWriterTest" time="0.092"/>
+  <testcase name="ownerChangeDropsOldBrowser" classname="com.farika.soundflow.WarmWriterTest" time="0.075"/>
+  <testcase name="closePreventsFurtherWrites" classname="com.farika.soundflow.WarmWriterTest" time="0.069"/>
+  <testcase name="failureIsNotReplayedAndNextExplicitOperationStartsFresh" classname="com.farika.soundflow.WarmWriterTest" time="0.19"/>
+  <testcase name="warmDoesNotWriteOrReportSuccess" classname="com.farika.soundflow.WarmWriterTest" time="0.111"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

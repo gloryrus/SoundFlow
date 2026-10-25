@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: checks=0
+INSTRUMENTATION_RESULT: failure=AssertionError like_browser_completed_or_denied
+INSTRUMENTATION_CODE: 0

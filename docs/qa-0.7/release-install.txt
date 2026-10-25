@@ -1,0 +1,9 @@
+Performing Streamed Install
+Success
+Starting: Intent { cmp=com.farika.soundflow/com.farika.soundflow.MainActivity }
+Status: ok
+Activity: com.farika.soundflow/com.farika.soundflow.MainActivity
+ThisTime: 1887
+TotalTime: 1887
+WaitTime: 2165
+Complete

@@ -1,0 +1,12 @@
+package com.farika.soundflow;
+import android.content.Context;import android.graphics.*;import java.io.*;import java.security.*;import java.nio.charset.StandardCharsets;
+final class OfflineArt {
+ private static File file(Context c,String url)throws Exception{byte[] h=MessageDigest.getInstance("SHA-256").digest(url.getBytes(StandardCharsets.UTF_8));StringBuilder name=new StringBuilder();for(byte b:h)name.append(String.format(java.util.Locale.ROOT,"%02x",b&255));return new File(new File(c.getFilesDir(),"offline_artwork"),name+".jpg");}
+ static boolean available(Context c,String url){if(url==null||url.isEmpty())return true;try{File f=file(c,url);return f.isFile()&&f.length()>0;}catch(Exception e){return false;}}
+ static Bitmap read(Context c,String url){return read(c,url,512);}
+ static int sample(int width,int height,int edge){int sample=1;while(Math.max(width,height)/sample>edge&&sample<128)sample*=2;return sample;}
+ static Bitmap decode(byte[] bytes,int edge){BitmapFactory.Options o=new BitmapFactory.Options();o.inJustDecodeBounds=true;BitmapFactory.decodeByteArray(bytes,0,bytes.length,o);if(o.outWidth<1||o.outHeight<1||o.outWidth>8192||o.outHeight>8192)return null;o.inSampleSize=sample(o.outWidth,o.outHeight,Math.max(32,edge));o.inPreferredConfig=Bitmap.Config.RGB_565;o.inJustDecodeBounds=false;return BitmapFactory.decodeByteArray(bytes,0,bytes.length,o);}
+ static Bitmap read(Context c,String url,int edge){try{File f=file(c,url);if(!f.isFile())return null;BitmapFactory.Options o=new BitmapFactory.Options();o.inJustDecodeBounds=true;BitmapFactory.decodeFile(f.toString(),o);if(o.outWidth<1||o.outHeight<1||o.outWidth>8192||o.outHeight>8192)return null;o.inSampleSize=sample(o.outWidth,o.outHeight,Math.max(32,Math.min(768,edge)));o.inPreferredConfig=Bitmap.Config.RGB_565;o.inJustDecodeBounds=false;return BitmapFactory.decodeFile(f.toString(),o);}catch(Exception ignored){return null;}}
+
+ static boolean save(Context c,ScApi api,String url){if(url==null||url.isEmpty())return true;try{File f=file(c,url);if(f.isFile()&&f.length()>0)return true;Bitmap b=api.artwork(url);if(b==null)return false;File dir=f.getParentFile();if(!dir.exists()&&!dir.mkdirs())return false;File tmp=File.createTempFile("art-",".tmp",dir);try{try(FileOutputStream out=new FileOutputStream(tmp)){if(!b.compress(Bitmap.CompressFormat.JPEG,88,out))return false;out.getFD().sync();}return tmp.renameTo(f);}finally{tmp.delete();}}catch(Exception ignored){return false;}}
+}

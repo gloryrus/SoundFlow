@@ -1,0 +1,6 @@
+VOLNA10_UPGRADE_SYNTHETIC_MARKER
+Performing Streamed Install
+Success
+VOLNA10_UPGRADE_SYNTHETIC_MARKER
+    versionCode=7 minSdk=26 targetSdk=35
+    versionName=0.11.0-webapi

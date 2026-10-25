@@ -1,0 +1,32 @@
+plugins { id 'com.android.application' }
+// Release credentials stay outside version control. Debug uses the Android SDK debug key.
+def releaseStore = System.getenv('SOUNDFLOW_KEYSTORE')
+android {
+    namespace 'com.farika.soundflow'
+    buildFeatures { buildConfig true }
+    compileSdk 35
+    buildToolsVersion '35.0.0'
+    defaultConfig { applicationId 'com.farika.soundflow'; minSdk 26; targetSdk 35; versionCode 23; versionName '1.0.0'; testInstrumentationRunner 'com.farika.soundflow.LabSmoke' }
+    testOptions { unitTests.all { systemProperty "robolectric.dependency.repo.url", "https://repo.maven.apache.org/maven2" } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_1_8; targetCompatibility JavaVersion.VERSION_1_8 }
+    signingConfigs {
+        if (releaseStore) {
+            releaseKey {
+                storeFile file(releaseStore)
+                storePassword System.getenv('SOUNDFLOW_STORE_PASSWORD')
+                keyAlias System.getenv('SOUNDFLOW_KEY_ALIAS')
+                keyPassword System.getenv('SOUNDFLOW_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        debug { debuggable true }
+        release { debuggable false; minifyEnabled false; if (releaseStore) signingConfig signingConfigs.releaseKey }
+    }
+}
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+    implementation 'androidx.media3:media3-exoplayer:1.5.1'
+    implementation 'androidx.media3:media3-exoplayer-hls:1.5.1'
+}

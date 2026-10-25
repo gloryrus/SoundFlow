@@ -1,0 +1,253 @@
+[
+  {
+    "repo": "1vilio/sixonefour",
+    "files": 28,
+    "revision": "486dfe9cfa0ee14621539b06693f13f6418904a3",
+    "method": "bounded raw-source tree",
+    "truncated_tree": false
+  },
+  {
+    "repo": "BlazeInferno64/soundcloud-core",
+    "files": 6,
+    "archive_bytes": 31719,
+    "archive_root": "soundcloud-core-HEAD"
+  },
+  {
+    "repo": "COMF2222/veirune",
+    "files": 32,
+    "revision": "d9d3f3d33610d6c6b2615f35a17dc5df245c68e1",
+    "method": "bounded raw-source tree",
+    "truncated_tree": false
+  },
+  {
+    "repo": "Fleacon/SoundCloudSharp",
+    "files": 134,
+    "archive_bytes": 89247,
+    "archive_root": "SoundCloudSharp-HEAD"
+  },
+  {
+    "repo": "GraspCommercial76/soundcloud-pc-app",
+    "files": 3,
+    "archive_bytes": 472635,
+    "archive_root": "soundcloud-pc-app-HEAD"
+  },
+  {
+    "repo": "Illogicalll/sctui",
+    "files": 33,
+    "archive_bytes": 11346693,
+    "archive_root": "sctui-HEAD"
+  },
+  {
+    "repo": "Jomvet-lovers/soundcloud-desktop",
+    "files": 78,
+    "archive_bytes": 2867554,
+    "archive_root": "soundcloud-desktop-HEAD"
+  },
+  {
+    "repo": "MinakowDev/freakcloud",
+    "files": 38,
+    "archive_bytes": 2360919,
+    "archive_root": "freakcloud-HEAD"
+  },
+  {
+    "repo": "Orang-Studio/OrangPlayer",
+    "files": 1,
+    "archive_bytes": 12444,
+    "archive_root": "OrangPlayer-HEAD"
+  },
+  {
+    "repo": "alexandre-abrioux/soundcloud-reverse",
+    "files": 10,
+    "archive_bytes": 783698,
+    "archive_root": "soundcloud-reverse-HEAD"
+  },
+  {
+    "repo": "andreystarkov/overabstracted",
+    "files": 12,
+    "archive_bytes": 278777,
+    "archive_root": "overabstracted-HEAD"
+  },
+  {
+    "repo": "barenddt/soundify",
+    "files": 3,
+    "archive_bytes": 253827,
+    "archive_root": "soundify-HEAD"
+  },
+  {
+    "repo": "bspst/soundground",
+    "files": 3,
+    "archive_bytes": 131135,
+    "archive_root": "soundground-HEAD"
+  },
+  {
+    "repo": "chrisdruta/nimbus",
+    "files": 56,
+    "archive_bytes": 417840,
+    "archive_root": "nimbus-HEAD"
+  },
+  {
+    "repo": "depado/parakeet",
+    "files": 3,
+    "archive_bytes": 2229393,
+    "archive_root": "parakeet-HEAD"
+  },
+  {
+    "repo": "devilAPI/soundcloud-adfree-uwp-app",
+    "files": 1,
+    "archive_bytes": 1405,
+    "archive_root": "soundcloud-adfree-uwp-app-HEAD"
+  },
+  {
+    "repo": "dissstructed1337/soundcloud-desktop",
+    "files": 3,
+    "archive_bytes": 1480181,
+    "archive_root": "soundcloud-desktop-HEAD"
+  },
+  {
+    "repo": "dwindles/holdonquietly-soundcloud",
+    "files": 2,
+    "archive_bytes": 1262286,
+    "archive_root": "holdonquietly-soundcloud-HEAD"
+  },
+  {
+    "repo": "end-sky/wisp",
+    "files": 3,
+    "archive_bytes": 294334,
+    "archive_root": "wisp-HEAD"
+  },
+  {
+    "repo": "enderice2/soundcloud-desktop",
+    "files": 3,
+    "archive_bytes": 177404,
+    "archive_root": "soundcloud-desktop-HEAD"
+  },
+  {
+    "repo": "giuseppebianchi/loud",
+    "files": 104,
+    "revision": "6efb2a38e263d03cf25bcba18478ad8a99d3a32a",
+    "method": "bounded raw-source tree",
+    "truncated_tree": false
+  },
+  {
+    "repo": "hellsontime/scdl",
+    "files": 9,
+    "archive_bytes": 728514,
+    "archive_root": "scdl-HEAD"
+  },
+  {
+    "repo": "imthaghost/scdl",
+    "files": 7,
+    "archive_bytes": 325836,
+    "archive_root": "scdl-HEAD"
+  },
+  {
+    "repo": "keshavbhatt/orange",
+    "files": 2,
+    "archive_bytes": 4389204,
+    "archive_root": "orange-HEAD"
+  },
+  {
+    "repo": "luviel19/Music_Island",
+    "files": 5,
+    "archive_bytes": 7658766,
+    "archive_root": "Music_Island-HEAD"
+  },
+  {
+    "repo": "okeydw/SoundCloud-Android",
+    "files": 41,
+    "revision": "d2fece262b2f2fdd7f72e722bafa72058e957b71",
+    "method": "bounded raw-source tree",
+    "truncated_tree": false
+  },
+  {
+    "repo": "omkarcloud/soundcloud-scraper",
+    "files": 13,
+    "archive_bytes": 601747,
+    "archive_root": "soundcloud-scraper-HEAD"
+  },
+  {
+    "repo": "polishtinsmithabyss/SoundCloud-Downloader-2026",
+    "files": 1,
+    "archive_bytes": 245154,
+    "archive_root": "SoundCloud-Downloader-2026-HEAD"
+  },
+  {
+    "repo": "quantm-app/Quantm",
+    "files": 9,
+    "archive_bytes": 3959241,
+    "archive_root": "Quantm-HEAD"
+  },
+  {
+    "repo": "rvpanoz/soundload",
+    "files": 4,
+    "archive_bytes": 1129842,
+    "archive_root": "soundload-HEAD"
+  },
+  {
+    "repo": "rwieruch/favesound-mobx",
+    "files": 79,
+    "archive_bytes": 83791,
+    "archive_root": "favesound-mobx-HEAD"
+  },
+  {
+    "repo": "rwieruch/favesound-redux",
+    "files": 93,
+    "archive_bytes": 107191,
+    "archive_root": "favesound-redux-HEAD"
+  },
+  {
+    "repo": "savo-o/resona",
+    "files": 180,
+    "revision": "0adbfd121e049c9cf9fbed08d3a32f51d73edf4d",
+    "method": "bounded raw-source tree",
+    "truncated_tree": false
+  },
+  {
+    "repo": "savo-o/resona-status",
+    "files": 1,
+    "archive_bytes": 402618,
+    "archive_root": "resona-status-HEAD"
+  },
+  {
+    "repo": "soroushchehresa/vue-soundcloud",
+    "files": 13,
+    "archive_bytes": 141711,
+    "archive_root": "vue-soundcloud-HEAD"
+  },
+  {
+    "repo": "sumanthratna/soundcloud9000",
+    "files": 5,
+    "archive_bytes": 30575,
+    "archive_root": "soundcloud9000-HEAD"
+  },
+  {
+    "repo": "wubly/mosaic",
+    "files": 17,
+    "archive_bytes": 903290,
+    "archive_root": "mosaic-HEAD"
+  },
+  {
+    "repo": "yunghog/soundcloud-coverart-downloader",
+    "files": 3,
+    "archive_bytes": 127306,
+    "archive_root": "soundcloud-coverart-downloader-HEAD"
+  },
+  {
+    "repo": "yurenip/audionode",
+    "files": 4,
+    "archive_bytes": 218668,
+    "archive_root": "audionode-HEAD"
+  },
+  {
+    "repo": "zxcloli666/SoundCloud-Desktop",
+    "files": 219,
+    "archive_bytes": 5739582,
+    "archive_root": "SoundCloud-Desktop-HEAD"
+  },
+  {
+    "repo": "zxczxczxczxczxczxc1111/soundcloud-desktop",
+    "files": 127,
+    "archive_bytes": 3185364,
+    "archive_root": "soundcloud-desktop-HEAD"
+  }
+]

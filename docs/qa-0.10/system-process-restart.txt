@@ -1,0 +1,7 @@
+Before PID: 4151
+package=com.farika.soundflow
+state=PlaybackState {state=3, position=726, buffered position=0, speed=1.0, updated=1205662, actions=823, custom actions=[], active item id=-1, error=null}
+After PID: 4214
+package=com.farika.soundflow
+state=PlaybackState {state=3, position=774, buffered position=0, speed=1.0, updated=1257126, actions=823, custom actions=[], active item id=-1, error=null}
+PASS: actual sticky-process restart resumed native audio

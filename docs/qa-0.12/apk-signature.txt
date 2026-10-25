@@ -1,0 +1,17 @@
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+Verified for SourceStamp: false
+Number of signers: 1
+Signer #1 certificate DN: CN=Volna Lab Independent Build
+Signer #1 certificate SHA-256 digest: 38221e367706f5b3f1965b6420ce1bc5e18c7830d187f5208e110fd4261f6fa4
+Signer #1 certificate SHA-1 digest: 4dde11019feab03575f1e9a67ae4ed3b5357156a
+Signer #1 certificate MD5 digest: ea6064a789d469753a883ef38cd4a193
+Signer #1 key algorithm: RSA
+Signer #1 key size (bits): 3072
+Signer #1 public key SHA-256 digest: 0bf0f4fa8502b8623236588717faff84355da6320132532beb9661313f1b30c1
+Signer #1 public key SHA-1 digest: 2d035e4e8d9f24c4ffb33942742ff336f7d03db3
+Signer #1 public key MD5 digest: c55d5ddc4550e4980d2533acb841ba49

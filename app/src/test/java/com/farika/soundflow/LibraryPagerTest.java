@@ -1,0 +1,16 @@
+package com.farika.soundflow;
+import org.junit.*;import org.junit.runner.RunWith;import org.robolectric.*;import org.robolectric.annotation.Config;import org.json.*;import java.util.*;import java.io.*;import static org.junit.Assert.*;
+@RunWith(RobolectricTestRunner.class)
+@Config(sdk=28,manifest=Config.NONE,application=android.app.Application.class)
+public class LibraryPagerTest {
+ final LibraryPager.Control control=new LibraryPager.Control(){public void check(){}public void progress(int a,int b){}};
+ static ScApi.Page page(int offset,int n,boolean playlists)throws Exception{ScApi.Page p=new ScApi.Page();for(int i=offset;i<offset+n;i++)if(playlists)p.playlists.add(new JSONObject().put("id",""+i).put("title","playlist "+i));else p.tracks.add(new Library.Track("sc:"+i,"track "+i,"artist",10000,true));return p;}
+ @Test public void all250LikedTracksAreLoaded()throws Exception{List<String> calls=new ArrayList<>();ScApi.Page result=LibraryPager.all(next->{calls.add(next);if(next.isEmpty()){ScApi.Page p=page(0,100,false);p.next="page2";return p;}if(next.equals("page2")){ScApi.Page p=page(100,100,false);p.next="page3";return p;}return page(200,50,false);},control);assertEquals(250,result.tracks.size());assertEquals(Arrays.asList("","page2","page3"),calls);assertTrue(result.next.isEmpty());}
+ @Test public void all250PlaylistsAreLoaded()throws Exception{int[] n={0};ScApi.Page result=LibraryPager.all(next->{int offset=n[0]++*100;ScApi.Page p=page(offset,offset==200?50:100,true);if(offset<200)p.next="p"+offset;return p;},control);assertEquals(250,result.playlists.size());assertEquals(3,n[0]);assertTrue(result.next.isEmpty());}
+ @Test public void no1000PlaylistCap()throws Exception{int[] n={0};ScApi.Page result=LibraryPager.all(next->{int offset=n[0]++*100;ScApi.Page p=page(offset,100,true);if(n[0]<13)p.next="p"+n[0];return p;},control);assertEquals(1300,result.playlists.size());}
+ @Test public void duplicatesAcrossPagesAreIgnored()throws Exception{int[] n={0};ScApi.Page result=LibraryPager.all(next->{ScApi.Page p=page(n[0]++==0?0:50,100,false);if(n[0]==1)p.next="second";return p;},control);assertEquals(150,result.tracks.size());}
+ @Test public void duplicatePlaylistsIgnored()throws Exception{int[] n={0};ScApi.Page result=LibraryPager.all(next->{ScApi.Page p=page(0,3,true);if(n[0]++==0)p.next="second";return p;},control);assertEquals(3,result.playlists.size());}
+ @Test public void repeatedCursorIsFailureNotPartialSuccess()throws Exception{try{LibraryPager.all(next->{ScApi.Page p=page(0,10,false);p.next="loop";return p;},control);fail();}catch(IOException expected){assertTrue(expected.getMessage().contains("Повтор"));}}
+ @Test public void failureOnSecondPageDoesNotReturnFirst100()throws Exception{try{LibraryPager.all(next->{if(!next.isEmpty())throw new IOException("offline");ScApi.Page p=page(0,100,false);p.next="second";return p;},control);fail();}catch(IOException expected){assertEquals("offline",expected.getMessage());}}
+ @Test public void cancellationCheckedBetweenPages()throws Exception{int[] n={0};try{LibraryPager.all(next->{ScApi.Page p=page(0,100,false);p.next="more";return p;},new LibraryPager.Control(){public void check()throws Exception{if(++n[0]>2)throw new InterruptedIOException();}public void progress(int a,int b){}});fail();}catch(InterruptedIOException expected){}}
+}

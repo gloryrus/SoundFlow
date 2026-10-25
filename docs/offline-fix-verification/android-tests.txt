@@ -1,0 +1,4 @@
+com.farika.soundflow.ClearStreamCacheTest: tests=12, failures=0, errors=0
+com.farika.soundflow.SwipeDispatchTest: tests=9, failures=0, errors=0
+com.farika.soundflow.WarmWriterTest: tests=7, failures=0, errors=0
+Build: assembleDebug successful; apksigner verify successful.

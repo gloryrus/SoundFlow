@@ -1,0 +1,9 @@
+INSTRUMENTATION_RESULT: checks=7
+INSTRUMENTATION_RESULT: hostname_mismatch_still_rejected=PASS
+INSTRUMENTATION_RESULT: native_https_routes_loopback_only=PASS
+INSTRUMENTATION_RESULT: untrusted_certificate_still_rejected=PASS
+INSTRUMENTATION_RESULT: local_dpi_default_off=PASS
+INSTRUMENTATION_RESULT: unrelated_hosts_unchanged=PASS
+INSTRUMENTATION_RESULT: scapi_https_end_to_end_tls_through_fragmenter=PASS
+INSTRUMENTATION_RESULT: media3_https_audio_transport_through_fragmenter=PASS
+INSTRUMENTATION_CODE: -1

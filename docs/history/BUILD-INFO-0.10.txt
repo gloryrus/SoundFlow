@@ -1,0 +1,8 @@
+Volna Lab0.10.0-localdpi / versionCode6
+applicationId: com.farika.soundflow
+minSdk26 / targetSdk35 / compileSdk35
+JDK21 / Gradle8.9 / AGP8.7.3 / Media3 1.5.1
+In-place update over Lab0.5–0.9; same certificate.
+Expected certificate SHA256: 38221e367706f5b3f1965b6420ce1bc5e18c7830d187f5208e110fd4261f6fa4
+Provider-specific DPI bypass, real-account writes and offline-license issuance NOT verified.
+Public source excludes production signing credentials. androidTest transport-test.p12 is a PUBLIC, synthetic loopback fixture, not a production identity/key.

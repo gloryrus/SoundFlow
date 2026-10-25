@@ -1,0 +1,7 @@
+Volna Lab 0.5.0-accountlab / versionCode 1
+applicationId: com.farika.soundflow
+minSdk 26 / targetSdk 35 / compileSdk 35
+JDK 21 / Gradle 8.9 / Android Gradle Plugin 8.7.3 / Media3 1.5.1
+New independently signed package, installed alongside 0.4, not an in-place update.
+Real SoundCloud account write/DRM license acceptance was not tested.
+Public source excludes private signing credentials; separate private backup supplied.

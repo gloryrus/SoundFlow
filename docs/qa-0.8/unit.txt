@@ -1,0 +1,6 @@
+AuthCapture: 23 checks passed; no network used
+StreamPolicy: 20 checks passed; no network or real tokens used
+RecommendationRanker: 13 checks passed; synthetic data only
+EqKernel: 11 checks passed; deterministic PCM, no network
+FocusIntent: 11 checks passed
+Account browser script: 40 checks passed (stub fetch only, no real account)

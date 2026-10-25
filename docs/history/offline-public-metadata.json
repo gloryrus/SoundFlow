@@ -1,0 +1,121 @@
+{
+  "scope": "Anonymous current network only; not user account/region",
+  "tracks": [
+    {
+      "id": 2413615341,
+      "title": "Так Манят Облака (Bass Boosted)",
+      "duration": 140506,
+      "full_duration": 140460,
+      "policy": "MONETIZE",
+      "streamable": true,
+      "downloadable": false,
+      "variants": [
+        {
+          "protocol": "hls",
+          "mime": "audio/mp4; codecs=\"mp4a.40.2\"",
+          "snipped": false,
+          "duration": 140506
+        },
+        {
+          "protocol": "hls",
+          "mime": "audio/mp4; codecs=\"mp4a.40.2\"",
+          "snipped": false,
+          "duration": 140506
+        },
+        {
+          "protocol": "hls",
+          "mime": "audio/mpegurl",
+          "snipped": false,
+          "duration": 140506
+        }
+      ]
+    },
+    {
+      "id": 1571435668,
+      "title": "Noize MC - Какая жалость",
+      "duration": 154886,
+      "full_duration": 154880,
+      "policy": "MONETIZE",
+      "streamable": true,
+      "downloadable": false,
+      "variants": [
+        {
+          "protocol": "hls",
+          "mime": "audio/mp4; codecs=\"mp4a.40.2\"",
+          "snipped": false,
+          "duration": 154886
+        },
+        {
+          "protocol": "hls",
+          "mime": "audio/mp4; codecs=\"mp4a.40.2\"",
+          "snipped": false,
+          "duration": 154886
+        },
+        {
+          "protocol": "hls",
+          "mime": "audio/mpegurl",
+          "snipped": false,
+          "duration": 154886
+        }
+      ]
+    },
+    {
+      "id": 1228631209,
+      "title": "Вселенная бесконечна?",
+      "duration": 245893,
+      "full_duration": 245891,
+      "policy": "MONETIZE",
+      "streamable": true,
+      "downloadable": false,
+      "variants": [
+        {
+          "protocol": "hls",
+          "mime": "audio/mp4; codecs=\"mp4a.40.2\"",
+          "snipped": false,
+          "duration": 245893
+        },
+        {
+          "protocol": "hls",
+          "mime": "audio/mp4; codecs=\"mp4a.40.2\"",
+          "snipped": false,
+          "duration": 245893
+        },
+        {
+          "protocol": "hls",
+          "mime": "audio/mpegurl",
+          "snipped": false,
+          "duration": 245893
+        }
+      ]
+    },
+    {
+      "id": 2411545905,
+      "title": "Бременские музыканты",
+      "duration": 152288,
+      "full_duration": 152241,
+      "policy": "MONETIZE",
+      "streamable": true,
+      "downloadable": false,
+      "variants": [
+        {
+          "protocol": "hls",
+          "mime": "audio/mp4; codecs=\"mp4a.40.2\"",
+          "snipped": false,
+          "duration": 152288
+        },
+        {
+          "protocol": "hls",
+          "mime": "audio/mp4; codecs=\"mp4a.40.2\"",
+          "snipped": false,
+          "duration": 152288
+        },
+        {
+          "protocol": "hls",
+          "mime": "audio/mpegurl",
+          "snipped": false,
+          "duration": 152288
+        }
+      ]
+    }
+  ]
+}

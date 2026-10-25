@@ -1,0 +1,18 @@
+.gradle/
+**/build/
+dist/
+local.properties
+signing-private/
+*.jks
+*.keystore
+*.p12
+*.apk
+*.aab
+# Public synthetic TLS fixture used only by instrumentation tests
+!app/src/androidTest/assets/transport-test.p12
+.env
+.env.*
+!.env.example
+.DS_Store
+*.iml
+.idea/

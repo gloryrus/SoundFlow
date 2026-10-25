@@ -1,0 +1,295 @@
+--- a/app/src/androidTest/java/app/volna/direct/LabSmoke.java
++++ b/app/src/androidTest/java/app/volna/direct/LabSmoke.java
+@@ -6,7 +6,7 @@
+  @Override public Activity newActivity(ClassLoader cl,String name,Intent intent)throws InstantiationException,IllegalAccessException,ClassNotFoundException{if(InlineCases.armed&&name.equals("app.volna.direct.MainActivity"))return new InlineCases.FixtureActivity();if(WriterCases.armed&&name.equals("app.volna.direct.AccountWebActivity"))return new WriterCases.FixtureActivity();return super.newActivity(cl,name,intent);}
+  @Override public void onCreate(Bundle b){super.onCreate(b);mode=b==null?"":b.getString("mode","");start();}
+  @Override public void onStart(){if(mode.equals("inline")){InlineCases.run(this);return;}if(mode.equals("autocontrol")||mode.startsWith("fresh-")){Lifecycle13Cases.run(this,mode);return;}if(mode.equals("writer")){WriterCases.run(this);return;}if(mode.equals("webapi")){WebApiCases.run(this);return;}if(mode.equals("settings-ui")){SettingsUi.run(this);return;}if(mode.equals("dpi")){DpiCases.run(this);return;}if(mode.equals("continuity")){ContinuityCases.run(this);return;}if(mode.equals("motion-ui")){MotionUi.run(this);return;}if(mode.equals("motion")||mode.equals("motion-disabled")){MotionCases.run(this,mode);return;}if(mode.equals("resume")||mode.startsWith("recovery-")){new ResumeCases(this).run(mode);return;}if(mode.equals("controls-ui")){ControlsFixtures.run(this);return;}if(mode.equals("advanced")){AdvancedCases.run(this);return;}if(mode.equals("native")){runNative();return;}if(mode.equals("fixtures")){fixtures();return;}Context c=getTargetContext();String original=Session.get(c);String oldId=c.getSharedPreferences("profile",0).getString("id","");String offlineId=UUID.randomUUID().toString();Activity main=null;try{
+- check(c.getPackageName().equals("app.volna.direct.accountlab"),"separate_package");check(c.getPackageManager().getPackageInfo(c.getPackageName(),0).versionName.startsWith("0.13.0"),"version");
++ check(c.getPackageName().equals("app.volna.direct.accountlab"),"separate_package");check(c.getPackageManager().getPackageInfo(c.getPackageName(),0).versionName.startsWith("0.15.0"),"version");
+  c.getSharedPreferences("profile",0).edit().putString("id","123").putString("name","QA Synthetic Account").commit();Session.put(c,"OAuth SYNTHETIC_TEST_TOKEN_NOT_REAL");
+  ArrayList<Library.Track> tracks=new ArrayList<>();for(int i=0;i<240;i++){Library.Track t=new Library.Track("sc:"+(1000+i),"Трек "+i,"Тестовый исполнитель",120000,true);t.remote=new JSONObject().put("id",""+(1000+i)).put("permalink_url","https://soundcloud.com/test/track").put("secret_token","DO_NOT_STORE").put("media",new JSONObject().put("token","DO_NOT_STORE"));tracks.add(t);}tracks.add(tracks.get(0));
+  final int[] calls={0};FavoriteLoader.Control control=new FavoriteLoader.Control(){public void check(){}public void progress(int n){}};ArrayList<Library.Track> paged=FavoriteLoader.load(next->{ScApi.Page page=new ScApi.Page();int i=calls[0]++;page.tracks.addAll(tracks.subList(i*80,(i+1)*80));page.next=i<2?"https://api-v2.soundcloud.com/next?page="+(i+1):"";return page;},control);check(paged.size()==240&&calls[0]==3,"favorites_all_three_pages");boolean cycle=false;try{FavoriteLoader.load(next->{ScApi.Page page=new ScApi.Page();page.next="https://api-v2.soundcloud.com/same";return page;},control);}catch(IOException e){cycle=true;}check(cycle,"pagination_cycle_rejected");boolean cancel=false;try{FavoriteLoader.load(next->new ScApi.Page(),new FavoriteLoader.Control(){public void check()throws Exception{throw new java.io.InterruptedIOException();}public void progress(int n){}});}catch(java.io.InterruptedIOException e){cancel=true;}check(cancel,"pagination_cancelled_not_partial_success");
+@@ -24,7 +24,7 @@
+  private void nativeCheck(boolean b,String name){if(!b)throw new AssertionError(name);checks++;result.putString(name,"PASS");}
+  private void copy(InputStream in,File dest)throws Exception{try(InputStream a=in;OutputStream out=new FileOutputStream(dest)){byte[] b=new byte[8192];int n;while((n=a.read(b))!=-1)out.write(b,0,n);}}
+  private void runNative(){Context c=getTargetContext();File tone=new File(c.getFilesDir(),"qa_native_test.wav");String offId=UUID.randomUUID().toString();try{
+-  nativeCheck(c.getPackageManager().getPackageInfo(c.getPackageName(),0).versionName.equals("0.14.0-desktop-bootstrap"),"version");
++  nativeCheck(c.getPackageManager().getPackageInfo(c.getPackageName(),0).versionName.equals("0.15.0-warm-swipes"),"version");
+   String sealed=OfflineVault.seal("SYNTHETIC_TEST_METADATA");nativeCheck(OfflineVault.open(sealed).equals("SYNTHETIC_TEST_METADATA"),"vault_roundtrip");boolean rejected=false;try{OfflineVault.open(sealed.substring(0,sealed.length()-5)+"AAAAA");}catch(Exception e){rejected=true;}nativeCheck(rejected,"vault_tamper_rejected");
+   nativeCheck(!ScApi.trusted("http://soundcloud.com/test")&&!ScApi.trusted("https://soundcloud.com.evil.test/")&&!ScApi.trusted("https://soundcloud.com@evil.test/"),"network_origin_checks");
+   nativeCheck(new OfflineStore(c).find("offline:../../bad")==null,"offline_invalid_path_rejected");
+--- a/app/src/main/java/app/volna/direct/AccountWriter.java
++++ b/app/src/main/java/app/volna/direct/AccountWriter.java
+@@ -4,23 +4,30 @@
+ public class AccountWriter {
+  public interface Callback {void complete(Intent result);void failed(int status,String reason,boolean verification);}
+  protected final Activity activity;private final Callback callback;private final Handler handler=new Handler(Looper.getMainLooper());
+- private WebView web;private boolean busy,ready,current,executing,closed;private String client="",observed="",owner="",op="",track="",playlist="",title="",key="",authUsed="",clientUsed="";private long deadline;private String pageHost="not_loaded";private int pageError=0,pageHttp=0,apiRequests=0;
++ private WebView web;private boolean busy,ready,current,executing,closed;private String client="",observed="",owner="",op="",track="",playlist="",title="",key="",authUsed="",clientUsed="";private String browserOwner="";private long browserEpoch;private long deadline;private String pageHost="not_loaded";private int pageError=0,pageHttp=0,apiRequests=0;
+  public AccountWriter(Activity a,Callback c){activity=a;callback=c;}
++ protected WebView createWebView(){return new WebView(activity);}
+  public boolean busy(){return busy;}
+  private String user(){return activity.getSharedPreferences("profile",0).getString("id","");}
+  private boolean origin(){return web!=null&&AuthCapture.site(web.getUrl());}
+- private void observe(WebResourceRequest r){String url=r.getUrl().toString();if(!AuthCapture.api(url))return;String auth=AuthCapture.header(r.getRequestHeaders()),id=AuthCapture.client(url);handler.post(()->{if(closed)return;apiRequests++;if(!auth.isEmpty())observed=auth;if(!id.isEmpty()){client=id;current=true;}executeIfReady();});}
+- protected WebViewClient websiteClient(){return new WebViewClient(){public boolean shouldOverrideUrlLoading(WebView w,WebResourceRequest r){return r.isForMainFrame()&&!AuthCapture.site(r.getUrl().toString());}public WebResourceResponse shouldInterceptRequest(WebView w,WebResourceRequest r){observe(r);return null;}public void onPageStarted(WebView w,String url,android.graphics.Bitmap icon){ready=false;current=false;pageHost=hostCategory(url);}public void onPageFinished(WebView w,String url){pageHost=hostCategory(url);ready=origin();if(!ready)return;w.evaluateJavascript("(window.__sc_hydration||[]).filter(function(x){return x.hydratable==='apiClient';}).map(function(x){return x.data&&x.data.id;})[0]||''",raw->{try{Object id=new JSONTokener(raw).nextValue();if(id instanceof String&&((String)id).matches("[A-Za-z0-9_-]{16,256}")){client=(String)id;current=true;}}catch(Exception ignored){}executeIfReady();});}public void onReceivedHttpError(WebView w,WebResourceRequest r,WebResourceResponse response){if(r.isForMainFrame()){pageHttp=response.getStatusCode();fail(pageHttp,"PAGE_HTTP",false);}}public void onReceivedSslError(WebView w,SslErrorHandler h,android.net.http.SslError e){h.cancel();fail(0,"TLS_ERROR",false);}public void onReceivedError(WebView w,WebResourceRequest r,WebResourceError e){if(r.isForMainFrame()){pageError=e.getErrorCode();fail(0,"PAGE_ERROR",false);}}};}
++ private void observe(WebResourceRequest r,long epoch){String url=r.getUrl().toString();if(!AuthCapture.api(url))return;String auth=AuthCapture.header(r.getRequestHeaders()),id=AuthCapture.client(url);handler.post(()->{if(closed||epoch!=browserEpoch)return;apiRequests++;if(!auth.isEmpty())observed=auth;if(!id.isEmpty()){client=id;current=true;}executeIfReady();});}
++ protected WebViewClient websiteClient(){final long epoch=browserEpoch;return new WebViewClient(){public boolean shouldOverrideUrlLoading(WebView w,WebResourceRequest r){return r.isForMainFrame()&&!AuthCapture.site(r.getUrl().toString());}public WebResourceResponse shouldInterceptRequest(WebView w,WebResourceRequest r){observe(r,epoch);return null;}public void onPageStarted(WebView w,String url,android.graphics.Bitmap icon){if(w!=web||closed)return;ready=false;current=false;pageHost=hostCategory(url);}public void onPageFinished(WebView w,String url){if(w!=web||closed)return;pageHost=hostCategory(url);ready=origin();if(!ready)return;w.evaluateJavascript("(window.__sc_hydration||[]).filter(function(x){return x.hydratable==='apiClient';}).map(function(x){return x.data&&x.data.id;})[0]||''",raw->{if(closed||w!=web||epoch!=browserEpoch)return;try{Object id=new JSONTokener(raw).nextValue();if(id instanceof String&&((String)id).matches("[A-Za-z0-9_-]{16,256}")){client=(String)id;current=true;}}catch(Exception ignored){}executeIfReady();});}public void onReceivedHttpError(WebView w,WebResourceRequest r,WebResourceResponse response){if(w==web&&r.isForMainFrame()){pageHttp=response.getStatusCode();fail(pageHttp,"PAGE_HTTP",false);}}public void onReceivedSslError(WebView w,SslErrorHandler h,android.net.http.SslError e){h.cancel();if(w==web)fail(0,"TLS_ERROR",false);}public void onReceivedError(WebView w,WebResourceRequest r,WebResourceError e){if(w==web&&r.isForMainFrame()){pageError=e.getErrorCode();fail(0,"PAGE_ERROR",false);}}};}
+  public boolean submit(String operation,String id,String list,String name){
+   if(busy||closed)return false;owner=user();op=operation;track=id;playlist=list;title=name;busy=true;executing=false;deadline=System.currentTimeMillis()+60000;
+-  try{if(web==null){web=new WebView(activity);WebSettings settings=web.getSettings();settings.setUserAgentString(AccountBrowserProfile.desktop(settings.getUserAgentString()));settings.setUseWideViewPort(true);settings.setLoadWithOverviewMode(true);settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(true);settings.setAllowFileAccess(false);settings.setAllowContentAccess(false);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);settings.setMediaPlaybackRequiresUserGesture(true);CookieManager.getInstance().setAcceptCookie(true);CookieManager.getInstance().setAcceptThirdPartyCookies(web,true);web.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);web.setFocusable(false);web.setFocusableInTouchMode(false);web.setAlpha(0);web.setWebViewClient(websiteClient());((ViewGroup)activity.findViewById(android.R.id.content)).addView(web,0,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));web.loadUrl("https://soundcloud.com/");}else executeIfReady();handler.postDelayed(poll,400);return true;}catch(RuntimeException e){fail(0,"WEBVIEW_UNAVAILABLE",false);return true;}
++  try{ensureWeb();executeIfReady();handler.postDelayed(poll,80);return true;}catch(RuntimeException e){fail(0,"WEBVIEW_UNAVAILABLE",false);return true;}
+  }
++ /** Prepares only a signed-in first-party page; never submits an account mutation. */
++ public void warm(){if(closed||busy||user().isEmpty()||Session.get(activity).isEmpty())return;try{ensureWeb();}catch(RuntimeException ignored){destroyWeb();}}
++ private void ensureWeb(){if(web!=null&&!browserOwner.equals(user()))destroyWeb();if(web!=null)return;browserOwner=user();browserEpoch++;
++ web=createWebView();WebSettings settings=web.getSettings();settings.setUserAgentString(AccountBrowserProfile.desktop(settings.getUserAgentString()));settings.setUseWideViewPort(true);settings.setLoadWithOverviewMode(true);settings.setJavaScriptEnabled(true);settings.setDomStorageEnabled(true);settings.setAllowFileAccess(false);settings.setAllowContentAccess(false);settings.setMixedContentMode(WebSettings.MIXED_CONTENT_NEVER_ALLOW);settings.setMediaPlaybackRequiresUserGesture(true);CookieManager.getInstance().setAcceptCookie(true);CookieManager.getInstance().setAcceptThirdPartyCookies(web,true);web.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);web.setFocusable(false);web.setFocusableInTouchMode(false);web.setAlpha(0);web.setWebViewClient(websiteClient());((ViewGroup)activity.findViewById(android.R.id.content)).addView(web,0,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));web.loadUrl("https://soundcloud.com/");
++ }
++
+  private void executeIfReady(){if(!busy||executing||closed||!ready||!current||!origin())return;if(owner.isEmpty()||!owner.equals(user())){fail(0,"ACCOUNT_MISMATCH",false);return;}String cookie=AuthCapture.cookie(CookieManager.getInstance().getCookie("https://soundcloud.com/"));authUsed=!observed.isEmpty()?observed:!cookie.isEmpty()?cookie:Session.get(activity);clientUsed=client;key="_volna_inline_"+UUID.randomUUID().toString().replace("-","");executing=true;web.evaluateJavascript(AccountScript.build(key,authUsed,clientUsed,owner,op,track,playlist,title),null);}
+- private final Runnable poll=new Runnable(){public void run(){if(!busy||closed)return;if(!owner.equals(user())){fail(0,"ACCOUNT_MISMATCH",false);return;}if(System.currentTimeMillis()>deadline){fail(0,executing?"UNKNOWN_OUTCOME":ready?"CLIENT_BOOTSTRAP_MISSING":"PAGE_TIMEOUT",false);return;}if(!executing){executeIfReady();handler.postDelayed(this,400);return;}if(!origin()){fail(0,"UNKNOWN_OUTCOME",false);return;}web.evaluateJavascript("JSON.stringify(window["+AccountScript.quote(key)+"]||{})",raw->{if(!busy||closed)return;try{Object value=new JSONTokener(raw).nextValue();JSONObject result=new JSONObject(String.valueOf(value));if(result.length()==0||result.optBoolean("pending")){handler.postDelayed(poll,400);return;}if(!owner.equals(user())){fail(0,"ACCOUNT_MISMATCH",false);return;}if(result.optBoolean("ok")){Session.put(activity,authUsed,clientUsed);CookieManager.getInstance().flush();busy=false;executing=false;handler.removeCallbacksAndMessages(null);callback.complete(new Intent().putExtra("owner",owner).putExtra("op",op).putExtra("track",track).putExtra("playlist",result.optString("playlist_id")));}else fail(result.optInt("status"),result.optString("reason"),AuthCapture.challenge(result.optString("challenge")));}catch(Exception e){fail(0,"UNKNOWN_OUTCOME",false);}});}};
++ private final Runnable poll=new Runnable(){public void run(){if(!busy||closed)return;if(!owner.equals(user())){fail(0,"ACCOUNT_MISMATCH",false);return;}if(System.currentTimeMillis()>deadline){fail(0,executing?"UNKNOWN_OUTCOME":ready?"CLIENT_BOOTSTRAP_MISSING":"PAGE_TIMEOUT",false);return;}if(!executing){executeIfReady();handler.postDelayed(this,80);return;}if(!origin()){fail(0,"UNKNOWN_OUTCOME",false);return;}web.evaluateJavascript("JSON.stringify(window["+AccountScript.quote(key)+"]||{})",raw->{if(!busy||closed)return;try{Object value=new JSONTokener(raw).nextValue();JSONObject result=new JSONObject(String.valueOf(value));if(result.length()==0||result.optBoolean("pending")){handler.postDelayed(poll,80);return;}if(!owner.equals(user())){fail(0,"ACCOUNT_MISMATCH",false);return;}if(result.optBoolean("ok")){if(!authUsed.equals(Session.get(activity))||!clientUsed.equals(Session.client(activity)))Session.put(activity,authUsed,clientUsed);CookieManager.getInstance().flush();web.evaluateJavascript("delete window["+AccountScript.quote(key)+"]",null);busy=false;executing=false;handler.removeCallbacksAndMessages(null);callback.complete(new Intent().putExtra("owner",owner).putExtra("op",op).putExtra("track",track).putExtra("playlist",result.optString("playlist_id")));}else fail(result.optInt("status"),result.optString("reason"),AuthCapture.challenge(result.optString("challenge")));}catch(Exception e){fail(0,"UNKNOWN_OUTCOME",false);}});}};
+  private String lastDiagnostic="";
+  private static String hostCategory(String url){try{String h=android.net.Uri.parse(url).getHost();return "soundcloud.com".equals(h)||"www.soundcloud.com".equals(h)?"desktop":"m.soundcloud.com".equals(h)?"mobile":AuthCapture.site(url)?"first_party_other":"other";}catch(Exception e){return "unknown";}}
+  public String diagnostic(){return lastDiagnostic;}
+- private void fail(int status,String reason,boolean verification){if(!busy||closed)return;String v="unknown";try{android.content.pm.PackageInfo p=WebView.getCurrentWebViewPackage();if(p!=null&&p.versionName!=null&&p.versionName.matches("[0-9.]{1,40}"))v=p.versionName;}catch(RuntimeException ignored){}lastDiagnostic="stage="+(executing?"request":"bootstrap")+"; page="+pageHost+"; ready="+ready+"; client="+current+"; apiRequests="+apiRequests+"; pageError="+pageError+"; pageHttp="+pageHttp+"; WebView="+v;busy=false;executing=false;handler.removeCallbacksAndMessages(null);destroyWeb();callback.failed(status,reason,verification);}
+- private void destroyWeb(){ready=false;current=false;observed="";if(web!=null){web.stopLoading();ViewGroup p=(ViewGroup)web.getParent();if(p!=null)p.removeView(web);web.destroy();web=null;}}
++ private void fail(int status,String reason,boolean verification){if(closed)return;if(!busy){destroyWeb();return;}String v="unknown";try{android.content.pm.PackageInfo p=WebView.getCurrentWebViewPackage();if(p!=null&&p.versionName!=null&&p.versionName.matches("[0-9.]{1,40}"))v=p.versionName;}catch(RuntimeException ignored){}lastDiagnostic="stage="+(executing?"request":"bootstrap")+"; page="+pageHost+"; ready="+ready+"; client="+current+"; apiRequests="+apiRequests+"; pageError="+pageError+"; pageHttp="+pageHttp+"; WebView="+v;busy=false;executing=false;handler.removeCallbacksAndMessages(null);destroyWeb();callback.failed(status,reason,verification);}
++ private void destroyWeb(){browserEpoch++;browserOwner="";ready=false;current=false;observed="";client="";WebView old=web;web=null;if(old!=null){old.stopLoading();ViewGroup p=(ViewGroup)old.getParent();if(p!=null)p.removeView(old);old.destroy();}}
+  public void close(){closed=true;busy=false;handler.removeCallbacksAndMessages(null);destroyWeb();}
+ }
+--- a/app/src/main/java/app/volna/direct/MainActivity.java
++++ b/app/src/main/java/app/volna/direct/MainActivity.java
+@@ -41,8 +41,8 @@
+   if(Build.VERSION.SDK_INT>=35)root.setOnApplyWindowInsetsListener((v,insets)->{android.graphics.Insets b=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());v.setPadding(b.left,b.top,b.right,b.bottom);return insets;});setContentView(root);build();
+  }
+  @Override protected void onSaveInstanceState(Bundle s){saveHome();s.putString("process",VolnaApplication.PROCESS);s.putString("page",page);s.putString("filter",filter);s.putString("query",query);s.putString("playlist",playlist);s.putString("playlistId",playlistId);s.putString("playlistKind",playlistKind);super.onSaveInstanceState(s);}
+- @Override protected void onStart(){super.onStart();Motion.refresh(root);IntentFilter f=new IntentFilter(PlaybackService.EVENT);f.addAction(OfflineDownloadService.EVENT);lib=new Library(this);refreshSaved();if(page.equals("library")&&filter.equals("offline"))load(false);if(Build.VERSION.SDK_INT>=33)registerReceiver(state,f,Context.RECEIVER_NOT_EXPORTED);else registerReceiver(state,f);registered=true;handler.post(ticker);}
+- @Override protected void onStop(){saveHome();handler.removeCallbacks(ticker);if(registered){unregisterReceiver(state);registered=false;}super.onStop();}
++ @Override protected void onStart(){super.onStart();Motion.refresh(root);IntentFilter f=new IntentFilter(PlaybackService.EVENT);f.addAction(OfflineDownloadService.EVENT);lib=new Library(this);refreshSaved();if(page.equals("library")&&filter.equals("offline"))load(false);if(Build.VERSION.SDK_INT>=33)registerReceiver(state,f,Context.RECEIVER_NOT_EXPORTED);else registerReceiver(state,f);registered=true;handler.post(ticker);if(logged())handler.postDelayed(warmAccount,600);}
++ @Override protected void onStop(){handler.removeCallbacks(warmAccount);saveHome();handler.removeCallbacks(ticker);if(registered){unregisterReceiver(state);registered=false;}super.onStop();}
+  @Override protected void onDestroy(){if(accountWriter!=null)accountWriter.close();artCache.evictAll();generation++;worker.shutdownNow();images.shutdownNow();handler.removeCallbacksAndMessages(null);if(playerDialog!=null)playerDialog.dismiss();super.onDestroy();}
+  private GradientDrawable shape(int color,int radius){GradientDrawable d=new GradientDrawable();d.setColor(color);d.setCornerRadius(dp(radius));return d;}
+  private TextView text(String value,int size,int color,boolean bold){TextView t=new TextView(this);t.setText(value);t.setTextSize(size);t.setTextColor(color);if(bold)t.setTypeface(null,1);return t;}
+@@ -61,7 +61,7 @@
+  private void ui(Runnable r){runOnUiThread(()->{if(!isDestroyed()&&!isFinishing())r.run();});}
+  private void error(Exception e){String m=e instanceof ScApi.ApiError?e.getMessage():e instanceof IOException?e.getMessage():"Не удалось выполнить запрос SoundCloud";if(m==null||m.length()>180)m="Сеть недоступна или изменился веб-интерфейс SoundCloud";toast(m);/* A failed operation does not prove that the website session is invalid. Keep session and offline data. */}
+  private void build(){root.removeAllViews();LinearLayout header=row();header.setPadding(dp(20),dp(4),dp(12),0);header.addView(new WaveMark(this),lp(32,40));TextView brand=text("Волна Lab",23,TEXT,true);LinearLayout.LayoutParams bp=lp(0,64);bp.weight=1;bp.leftMargin=dp(10);header.addView(brand,bp);header.addView(icon(logged()?"●":"↪","Аккаунт SoundCloud",this::account),lp(48,48));header.addView(icon("⚙","Настройки приложения",this::settings),lp(48,48));root.addView(header,lp(-1,64));body=vertical();root.addView(body,new LinearLayout.LayoutParams(-1,0,1));
+-  mini=row();mini.setPadding(dp(14),0,dp(8),0);mini.setBackground(shape(SURFACE,20));FrameLayout smallArt=new FrameLayout(this);smallArt.setBackground(shape(LINE,10));smallArt.setClipToOutline(true);smallArt.addView(new WaveMark(this),new FrameLayout.LayoutParams(-1,-1));miniCover=new ImageView(this);miniCover.setScaleType(ImageView.ScaleType.CENTER_CROP);smallArt.addView(miniCover,new FrameLayout.LayoutParams(-1,-1));mini.addView(smallArt,lp(44,44));LinearLayout labels=vertical();labels.setPadding(dp(12),0,dp(4),0);miniTitle=text("Выберите трек",15,TEXT,true);miniTitle.setMaxLines(1);miniTitle.setEllipsize(TextUtils.TruncateAt.END);miniArtist=text("SoundCloud · прямое подключение",14,MUTED,false);miniArtist.setMaxLines(1);miniArtist.setEllipsize(TextUtils.TruncateAt.END);labels.addView(miniTitle);labels.addView(miniArtist);mini.addView(labels,new LinearLayout.LayoutParams(0,-2,1));labels.setOnClickListener(v->openPlayer());miniPlay=icon("▶","Играть или приостановить",()->{PlaybackService s=PlaybackService.instance;if(s!=null)s.toggle();else if(PlaybackCheckpoint.read(this)!=null)startForegroundService(new Intent(this,PlaybackService.class).setAction("RESTORE"));else if(!visible.isEmpty())play(visible.get(0),visible);});mini.addView(miniPlay,lp(48,52));mini.addView(icon("❯","Следующий трек",()->{if(PlaybackService.instance!=null)PlaybackService.instance.next();}),lp(48,52));LinearLayout.LayoutParams mp=lp(-1,72);mp.setMargins(dp(12),dp(8),dp(12),dp(2));root.addView(mini,mp);
++  mini=new TrackSwipeLayout(this,this::onTrackSwipe);mini.setOrientation(LinearLayout.HORIZONTAL);mini.setGravity(Gravity.CENTER_VERTICAL);mini.setOnClickListener(v->openPlayer());mini.setPadding(dp(14),0,dp(8),0);mini.setBackground(shape(SURFACE,20));FrameLayout smallArt=new FrameLayout(this);smallArt.setBackground(shape(LINE,10));smallArt.setClipToOutline(true);smallArt.addView(new WaveMark(this),new FrameLayout.LayoutParams(-1,-1));miniCover=new ImageView(this);miniCover.setScaleType(ImageView.ScaleType.CENTER_CROP);smallArt.addView(miniCover,new FrameLayout.LayoutParams(-1,-1));mini.addView(smallArt,lp(44,44));LinearLayout labels=vertical();labels.setPadding(dp(12),0,dp(4),0);miniTitle=text("Выберите трек",15,TEXT,true);miniTitle.setMaxLines(1);miniTitle.setEllipsize(TextUtils.TruncateAt.END);miniArtist=text("SoundCloud · прямое подключение",14,MUTED,false);miniArtist.setMaxLines(1);miniArtist.setEllipsize(TextUtils.TruncateAt.END);labels.addView(miniTitle);labels.addView(miniArtist);mini.addView(labels,new LinearLayout.LayoutParams(0,-2,1));labels.setOnClickListener(v->openPlayer());miniPlay=icon("▶","Играть или приостановить",()->{PlaybackService s=PlaybackService.instance;if(s!=null)s.toggle();else if(PlaybackCheckpoint.read(this)!=null)startForegroundService(new Intent(this,PlaybackService.class).setAction("RESTORE"));else if(!visible.isEmpty())play(visible.get(0),visible);});mini.addView(miniPlay,lp(48,52));mini.addView(icon("❯","Следующий трек",()->{if(PlaybackService.instance!=null)PlaybackService.instance.next();}),lp(48,52));LinearLayout.LayoutParams mp=lp(-1,72);mp.setMargins(dp(12),dp(8),dp(12),dp(2));root.addView(mini,mp);
+   nav=row();String[] ids={"home","search","library"},names={"Для вас","Поиск","Медиатека"},symbols={"⌂","⌕","♫"};for(int n=0;n<3;n++){final String id=ids[n];LinearLayout tab=vertical();tab.setGravity(Gravity.CENTER);tab.setPadding(dp(4),dp(4),dp(4),dp(4));if(page.equals(id))tab.setBackground(shape(SURFACE,16));TextView sym=text(symbols[n],25,page.equals(id)?ACCENT:MUTED,true),label=text(names[n],13,page.equals(id)?ACCENT:MUTED,false);sym.setGravity(Gravity.CENTER);label.setGravity(Gravity.CENTER);tab.addView(sym);tab.addView(label);tab.setOnClickListener(v->{if(page.equals(id))return;saveHome();page=id;playlist="";playlistId="";seed="";hideKeyboard();build();});Motion.press(tab);nav.addView(tab,new LinearLayout.LayoutParams(0,dp(68),1));}root.addView(nav,lp(-1,68));renderBody();updatePlayback();
+  }
+  private void heading(String title,String sub){LinearLayout h=vertical();h.setPadding(dp(24),dp(14),dp(24),dp(12));h.addView(text(title,28,TEXT,true));if(!sub.isEmpty()){gap(h,6);h.addView(text(sub,14,MUTED,false));}body.addView(h);}
+@@ -115,14 +115,18 @@
+  private void toggleLike(Library.Track t){if(t.id().isEmpty()){t.liked=!t.liked;lib.upsert(t);lib.save();adapter.notifyDataSetChanged();updatePlayback();return;}accountOperation(t.liked?"UNLIKE":"LIKE",t.id(),"","");}
+  protected AccountWriter createAccountWriter(AccountWriter.Callback callback){return new AccountWriter(this,callback);}
+  private AccountWriter accountWriter;
+- private void accountOperation(String op,String track,String playlist,String title){if(!logged()){login();return;}if(accountWriter!=null&&accountWriter.busy()){toast("Дождитесь подтверждения текущего изменения");return;}if(accountWriter!=null)accountWriter.close();accountWriter=createAccountWriter(new AccountWriter.Callback(){public void complete(Intent result){accountConfirmed(result);}public void failed(int status,String reason,boolean verification){String message="PAGE_HTTP".equals(reason)?"Страница SoundCloud вернула HTTP "+status+". Изменение не отправлено.":status==403?"SoundCloud отклонил запись (403). Изменение не сохранено.":status==401?"Обновите вход в SoundCloud. Данные и загрузки сохранены.":"ACCOUNT_MISMATCH".equals(reason)?"Сессия другого аккаунта. Изменение не выполнено.":"CLIENT_BOOTSTRAP_MISSING".equals(reason)?"Страница SoundCloud открылась, но конфигурация API не получена. Изменение не отправлено.":"PAGE_TIMEOUT".equals(reason)?"Сайт SoundCloud не загрузился в WebView. Изменение не отправлено. Сеть WebView может отличаться от сети плеера.":"PAGE_ERROR".equals(reason)||"PAGE_HTTP".equals(reason)?"Не удалось загрузить страницу SoundCloud. Изменение не отправлено.":"TLS_ERROR".equals(reason)?"Ошибка сертификата при загрузке SoundCloud. Соединение отменено.":"UNKNOWN_OUTCOME".equals(reason)?"Результат неизвестен. Проверьте библиотеку перед повтором, чтобы не создать дубликат.":"Не удалось отправить изменение. Проверьте сеть и актуальность Android System WebView.";AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this).setTitle("Изменение не подтверждено").setMessage(message+"\n\nКод: "+(reason!=null&&reason.matches("[A-Z_]{1,40}")?reason:"OTHER")+"; HTTP "+status+"\n"+(accountWriter==null?"":accountWriter.diagnostic())+(verification?" Сервис требует видимую проверку. Она не открывается автоматически.":"")).setNegativeButton("Закрыть",null);if(verification)dialog.setPositiveButton("Открыть проверку",(d,w)->startActivityForResult(new Intent(MainActivity.this,AccountWebActivity.class).putExtra("op",op).putExtra("track",track).putExtra("playlist",playlist).putExtra("title",title).putExtra("auto",false),71));dialog.show();}});toast("Отправляем изменение…");accountWriter.submit(op,track,playlist,title);}
++ private String accountOp="",accountTrack="",accountPlaylist="",accountTitle="";
++ private final Runnable warmAccount=()->{if(logged()&&!isFinishing())ensureAccountWriter().warm();};
++ private AccountWriter ensureAccountWriter(){if(accountWriter==null)accountWriter=createAccountWriter(new AccountWriter.Callback(){public void complete(Intent result){accountConfirmed(result);}public void failed(int status,String reason,boolean verification){final String op=accountOp,track=accountTrack,playlist=accountPlaylist,title=accountTitle;String message="PAGE_HTTP".equals(reason)?"Страница SoundCloud вернула HTTP "+status+". Изменение не отправлено.":status==403?"SoundCloud отклонил запись (403). Изменение не сохранено.":status==401?"Обновите вход в SoundCloud. Данные и загрузки сохранены.":"ACCOUNT_MISMATCH".equals(reason)?"Сессия другого аккаунта. Изменение не выполнено.":"CLIENT_BOOTSTRAP_MISSING".equals(reason)?"Страница SoundCloud открылась, но конфигурация API не получена. Изменение не отправлено.":"PAGE_TIMEOUT".equals(reason)?"Сайт SoundCloud не загрузился в WebView. Изменение не отправлено. Сеть WebView может отличаться от сети плеера.":"PAGE_ERROR".equals(reason)||"PAGE_HTTP".equals(reason)?"Не удалось загрузить страницу SoundCloud. Изменение не отправлено.":"TLS_ERROR".equals(reason)?"Ошибка сертификата при загрузке SoundCloud. Соединение отменено.":"UNKNOWN_OUTCOME".equals(reason)?"Результат неизвестен. Проверьте библиотеку перед повтором, чтобы не создать дубликат.":"Не удалось отправить изменение. Проверьте сеть и актуальность Android System WebView.";AlertDialog.Builder dialog=new AlertDialog.Builder(MainActivity.this).setTitle("Изменение не подтверждено").setMessage(message+"\n\nКод: "+(reason!=null&&reason.matches("[A-Z_]{1,40}")?reason:"OTHER")+"; HTTP "+status+"\n"+(accountWriter==null?"":accountWriter.diagnostic())+(verification?" Сервис требует видимую проверку. Она не открывается автоматически.":"")).setNegativeButton("Закрыть",null);if(verification)dialog.setPositiveButton("Открыть проверку",(d,w)->startActivityForResult(new Intent(MainActivity.this,AccountWebActivity.class).putExtra("op",op).putExtra("track",track).putExtra("playlist",playlist).putExtra("title",title).putExtra("auto",false),71));dialog.show();}});return accountWriter;}
++ private void accountOperation(String op,String track,String playlist,String title){if(!logged()){login();return;}if(accountWriter!=null&&accountWriter.busy()){toast("Дождитесь подтверждения текущего изменения");return;}accountOp=op;accountTrack=track;accountPlaylist=playlist;accountTitle=title;toast("Отправляем изменение…");ensureAccountWriter().submit(op,track,playlist,title);}
++
+ 
+  private void apiAccessInfo(){new AlertDialog.Builder(this).setTitle("Доступ к записи SoundCloud").setMessage("Лайки и плейлисты отправляются в api-v2.soundcloud.com с той же сессией и client_id, что используются для чтения библиотеки. Сторонний сервер и чужие секреты не используются. Это неофициальный веб-API: SoundCloud может изменить его или отклонить запрос.\n\nHTTP 403 не доказывает отсутствие зарегистрированного приложения. Повторный ввод пароля не гарантирует исправления. Если результат запроса неизвестен, проверьте библиотеку на сайте перед повтором.").setPositiveButton("Понятно",null).show();}
+  private void settings(){startActivity(new Intent(this,AppSettingsActivity.class));}
+  private void downloads(){startActivity(new Intent(this,AutoDownloadActivity.class));}
+  private void account(){if(!logged()){login();return;}String name=getSharedPreferences("profile",0).getString("name","SoundCloud");new AlertDialog.Builder(this).setTitle(name).setMessage("Веб-сессия хранится только на этом устройстве. Чужие серверы не используются. Этот способ входа неофициальный.").setPositiveButton("Обновить вход",(d,w)->login()).setNeutralButton("Выйти",(d,w)->new AlertDialog.Builder(this).setTitle("Выйти из SoundCloud?").setMessage("Сессия и новые офлайн-записи этого клиента будут удалены. Старые локальные оригиналы останутся.").setNegativeButton("Отмена",null).setPositiveButton("Выйти",(a,b)->{PlaybackService ps=PlaybackService.instance;if(ps!=null)ps.stopForLocalChange();getSystemService(android.app.job.JobScheduler.class).cancelAll();stopService(new Intent(this,OfflineDownloadService.class));if(accountWriter!=null){accountWriter.close();accountWriter=null;}PlaybackCheckpoint.clear(this);Session.clear(this);getSharedPreferences("profile",0).edit().clear().commit();new OfflineStore(this).clearAll();new PlaylistCache(this).clearAll();try(SyncDb db=new SyncDb(this)){db.clear();}new TasteStore(this).clear();new HomeFeed(this).clear();Session.clear(this);getSharedPreferences("profile",0).edit().clear().apply();AutoDownloads.schedule(this);try{CookieManager.getInstance().removeAllCookies(value->CookieManager.getInstance().flush());android.webkit.WebStorage.getInstance().deleteAllData();}catch(Throwable ignored){}artCache.evictAll();for(Iterator<Library.Track> it=lib.tracks.iterator();it.hasNext();){Library.Track tr=it.next();if(tr.cloud()||OfflineStore.isOffline(tr.uri))it.remove();}lib.save();build();}).show()).setNegativeButton("Закрыть",null).show();}
+  private void login(){startActivityForResult(new Intent(this,LoginActivity.class),50);}
+- @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==50&&result==RESULT_OK){if(accountWriter!=null){accountWriter.close();accountWriter=null;}mixMode=getSharedPreferences("recommendation_settings",0).getString(uid()+":mode","mix");seed="";build();AutoDownloads.kick(this);toast("Аккаунт SoundCloud подключён напрямую");}if(req==71&&result==RESULT_OK&&data!=null)accountConfirmed(data);}
++ @Override protected void onActivityResult(int req,int result,Intent data){super.onActivityResult(req,result,data);if(req==50&&result==RESULT_OK){if(accountWriter!=null){accountWriter.close();accountWriter=null;}mixMode=getSharedPreferences("recommendation_settings",0).getString(uid()+":mode","mix");seed="";build();AutoDownloads.kick(this);toast("Аккаунт SoundCloud подключён напрямую");}if(req==71&&result==RESULT_OK&&data!=null){if(accountWriter!=null){accountWriter.close();accountWriter=null;}accountConfirmed(data);handler.post(warmAccount);}}
+  private void accountConfirmed(Intent data){if(!uid().equals(data.getStringExtra("owner")))return;String op=data.getStringExtra("op"),id=data.getStringExtra("track");if("LIKE".equals(op)||"UNLIKE".equals(op)){boolean liked="LIKE".equals(op);for(Library.Track t:lib.tracks)if(id.equals(t.id()))t.liked=liked;for(Library.Track t:visible)if(id.equals(t.id()))t.liked=liked;new OfflineStore(this).updateLiked(id,liked);lib.save();saveHome();adapter.notifyDataSetChanged();updatePlayback();toast(liked?"Лайк подтверждён SoundCloud":"Лайк удалён в SoundCloud");}else{toast("Изменение подтверждено SoundCloud");if(showPlaylists||!playlistId.isEmpty())load(false);}AutoDownloads.kick(this);}
+ 
+  private void trackMenu(Library.Track t){ArrayList<String> items=new ArrayList<>();items.add("Похожие треки");items.add("Добавить в плейлист SoundCloud");items.add(t.cloud()?"Сохранить офлайн":"Удалить локальную копию");items.add("Открыть на SoundCloud");items.add("Не рекомендовать этот трек");new AlertDialog.Builder(this).setTitle(t.title).setItems(items.toArray(new String[0]),(d,w)->{
+@@ -157,9 +161,10 @@
+    if(!dragging){progress.setMax(Math.max(s.duration(),1));progress.setProgress(s.position());setLabel(playerTime,Library.time(s.position()));}setLabel(playerTotal,Library.time(s.duration()));
+   }
+  }
++ protected void onTrackSwipe(int direction){PlaybackService ps=PlaybackService.instance;if(ps==null)return;if(direction==TrackSwipe.NEXT)ps.next();else if(direction==TrackSwipe.PREVIOUS)ps.skipPrevious();updatePlayback();}
+  private void openPlayer(){
+   PlaybackService s=PlaybackService.instance;if(s==null&&PlaybackCheckpoint.read(this)!=null){startForegroundService(new Intent(this,PlaybackService.class).setAction("RESTORE_PAUSED"));handler.postDelayed(()->{if(!isFinishing()&&PlaybackService.instance!=null)openPlayer();},400);return;}if(s==null||lib.find(s.current)==null){toast("Сначала выберите трек");return;}if(playerDialog!=null&&playerDialog.isShowing())return;
+-  playerDialog=new Dialog(this,android.R.style.Theme_Material_NoActionBar);LinearLayout layout=vertical();layout.setBackgroundColor(BG);layout.setPadding(dp(24),dp(12),dp(24),dp(24));
++  playerDialog=new Dialog(this,android.R.style.Theme_Material_NoActionBar);LinearLayout layout=new TrackSwipeLayout(this,this::onTrackSwipe);layout.setOrientation(LinearLayout.VERTICAL);layout.setBackgroundColor(BG);layout.setPadding(dp(24),dp(12),dp(24),dp(24));
+   if(Build.VERSION.SDK_INT>=35)layout.setOnApplyWindowInsetsListener((v,insets)->{android.graphics.Insets b=insets.getInsets(WindowInsets.Type.systemBars()|WindowInsets.Type.displayCutout());v.setPadding(dp(24)+b.left,dp(12)+b.top,dp(24)+b.right,dp(24)+b.bottom);return insets;});
+   LinearLayout top=row();top.addView(icon("⌄","Свернуть плеер",()->Motion.close(playerDialog)),lp(48,48));TextView cap=text("СЕЙЧАС ИГРАЕТ",12,MUTED,true);cap.setGravity(Gravity.CENTER);LinearLayout.LayoutParams c=lp(0,-2);c.weight=1;top.addView(cap,c);top.addView(icon("⋯","Действия с треком",()->{PlaybackService ps=PlaybackService.instance;Library.Track tr=ps==null?null:lib.find(ps.current);if(tr!=null)trackMenu(tr);}),lp(48,48));layout.addView(top);
+   FrameLayout art=new FrameLayout(this);art.setBackground(shape(SURFACE,24));art.setClipToOutline(true);playerCover=new ImageView(this);playerCover.setScaleType(ImageView.ScaleType.CENTER_CROP);art.addView(playerCover,new FrameLayout.LayoutParams(-1,-1));playerFallback=new WaveMark(this);FrameLayout.LayoutParams wf=new FrameLayout.LayoutParams(dp(180),dp(140),Gravity.CENTER);art.addView(playerFallback,wf);LinearLayout.LayoutParams ap=lp(-1,0);ap.weight=1;ap.setMargins(0,dp(20),0,dp(24));layout.addView(art,ap);playerArtUri="";
+--- a/app/src/main/java/app/volna/direct/PlaybackService.java
++++ b/app/src/main/java/app/volna/direct/PlaybackService.java
+@@ -102,7 +102,8 @@
+  public void pause(){intent.pause();if(player!=null)player.pause();if(audio!=null&&focus!=null)audio.abandonAudioFocusRequest(focus);focusHeld=false;checkpoint();publish();stopForeground(STOP_FOREGROUND_DETACH);}
+  public void next(){advance(true);}
+  private void advance(boolean manual){if(queue.isEmpty())return;checkpoint();pendingPosition=0;finishListening(manual);index=shuffle&&queue.size()>1?(index+1+new Random().nextInt(queue.size()-1))%queue.size():(index+1)%queue.size();load();}
+- public void previous(){if(position()>3000){seek(0);return;}if(queue.isEmpty())return;checkpoint();pendingPosition=0;finishListening(true);index=(index+queue.size()-1)%queue.size();load();}
++ public void previous(){if(position()>3000){seek(0);return;}skipPrevious();}
++ public void skipPrevious(){if(queue.isEmpty())return;checkpoint();pendingPosition=0;finishListening(true);index=(index+queue.size()-1)%queue.size();load();}
+  public void seek(int p){if(player!=null&&prepared){player.seekTo(p);pendingPosition=Math.max(0,p);checkpoint();publish();}}
+  private PendingIntent action(String a){return PendingIntent.getService(this,a.hashCode(),new Intent(this,PlaybackService.class).setAction(a),PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);}
+  private Notification notification(){Library.Track t=library==null?null:library.find(current);PendingIntent open=PendingIntent.getActivity(this,0,new Intent(this,MainActivity.class),PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);return new Notification.Builder(this,"playback").setSmallIcon(R.drawable.ic_notification).setContentTitle(t==null?"Волна Direct":t.title).setContentText(!error.isEmpty()?error:t==null?"Подготовка":loading?"Подключение к SoundCloud…":t.artist).setContentIntent(open).setDeleteIntent(action("STOP")).setOnlyAlertOnce(true).setVisibility(Notification.VISIBILITY_PUBLIC).setOngoing(false).addAction(new Notification.Action.Builder(android.R.drawable.ic_media_previous,"Назад",action("PREV")).build()).addAction(new Notification.Action.Builder(isPlaying()?android.R.drawable.ic_media_pause:android.R.drawable.ic_media_play,isPlaying()?"Пауза":"Играть",action("TOGGLE")).build()).addAction(new Notification.Action.Builder(android.R.drawable.ic_media_next,"Далее",action("NEXT")).build()).addAction(new Notification.Action.Builder(android.R.drawable.ic_menu_close_clear_cancel,"Остановить",action("STOP")).build()).setStyle(new Notification.MediaStyle().setMediaSession(session.getSessionToken()).setShowActionsInCompactView(0,1,2)).build();}
+--- a/app/src/main/java/app/volna/direct/TrackSwipe.java
++++ b/app/src/main/java/app/volna/direct/TrackSwipe.java
+@@ -0,0 +1,20 @@
++package app.volna.direct;
++
++/** Deterministic single-pointer gesture policy, coordinates in dp. No playback or Android dependency. */
++public final class TrackSwipe {
++ public static final int NONE=0,NEXT=1,PREVIOUS=-1;
++ private float x,y;private long time;private boolean active,horizontal,vertical;
++ public void begin(float x,float y,long time){this.x=x;this.y=y;this.time=time;active=Float.isFinite(x)&&Float.isFinite(y);horizontal=false;vertical=false;}
++ public boolean move(float x,float y){
++  if(!active||vertical||!Float.isFinite(x)||!Float.isFinite(y))return false;
++  float dx=Math.abs(x-this.x),dy=Math.abs(y-this.y);
++  if(!horizontal){if(dy>18&&dy>dx*1.3f){vertical=true;return false;}if(dx>18&&dx>dy*1.5f)horizontal=true;}
++  return horizontal;
++ }
++ public int finish(float x,float y,long now){
++  boolean h=move(x,y);long elapsed=now-time;float dx=x-this.x,dy=y-this.y;
++  int result=active&&h&&elapsed>=0&&elapsed<=2000&&Float.isFinite(dx)&&Float.isFinite(dy)&&Math.abs(dx)>=56&&Math.abs(dx)>Math.abs(dy)*1.5f?(dx<0?NEXT:PREVIOUS):NONE;
++  cancel();return result;
++ }
++ public void cancel(){active=false;horizontal=false;vertical=false;}
++}
+--- a/app/src/main/java/app/volna/direct/TrackSwipeLayout.java
++++ b/app/src/main/java/app/volna/direct/TrackSwipeLayout.java
+@@ -0,0 +1,48 @@
++package app.volna.direct;
++
++import android.content.Context;
++import android.view.MotionEvent;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.LinearLayout;
++import android.widget.SeekBar;
++import java.util.function.IntConsumer;
++
++/** Intercepts a horizontal swipe, not a tap, vertical drag, multitouch, or a seek-bar gesture. */
++public final class TrackSwipeLayout extends LinearLayout {
++ private final TrackSwipe gesture=new TrackSwipe();private final float density;private final IntConsumer action;
++ private boolean blocked,dragged;private int pointer=-1;private float downX,downY;
++ public TrackSwipeLayout(Context context,IntConsumer action){super(context);density=context.getResources().getDisplayMetrics().density;this.action=action;}
++ private void begin(MotionEvent e){dragged=false;downX=e.getX();downY=e.getY();gesture.cancel();blocked=e.getPointerCount()!=1||seekAt(this,e.getX(),e.getY());pointer=e.getPointerId(0);if(!blocked)gesture.begin(e.getX()/density,e.getY()/density,e.getEventTime());}
++ private void moved(MotionEvent e){if(Math.abs(e.getX()-downX)>=18*density||Math.abs(e.getY()-downY)>=18*density)dragged=true;}
++ private void cancel(){gesture.cancel();blocked=true;pointer=-1;}
++ private boolean valid(MotionEvent e){return !blocked&&e.getPointerCount()==1&&e.getPointerId(0)==pointer;}
++ @Override public boolean onInterceptTouchEvent(MotionEvent e){
++  switch(e.getActionMasked()){
++   case MotionEvent.ACTION_DOWN:begin(e);return false;
++   case MotionEvent.ACTION_POINTER_DOWN:case MotionEvent.ACTION_POINTER_UP:case MotionEvent.ACTION_CANCEL:cancel();return false;
++   case MotionEvent.ACTION_MOVE:moved(e);return valid(e)&&gesture.move(e.getX()/density,e.getY()/density);
++   default:return false;
++  }
++ }
++ @Override public boolean onTouchEvent(MotionEvent e){
++  switch(e.getActionMasked()){
++   case MotionEvent.ACTION_DOWN:begin(e);return !blocked;
++   case MotionEvent.ACTION_POINTER_DOWN:case MotionEvent.ACTION_POINTER_UP:case MotionEvent.ACTION_CANCEL:cancel();return true;
++   case MotionEvent.ACTION_MOVE:moved(e);if(valid(e))gesture.move(e.getX()/density,e.getY()/density);return !blocked;
++   case MotionEvent.ACTION_UP:
++    if(!valid(e)){cancel();return false;}
++    moved(e);int direction=gesture.finish(e.getX()/density,e.getY()/density,e.getEventTime());pointer=-1;
++    if(direction!=TrackSwipe.NONE)action.accept(direction);else if(!dragged&&isClickable()&&Math.abs(e.getX()-downX)<18*density&&Math.abs(e.getY()-downY)<18*density)performClick();
++    return true;
++   default:return !blocked;
++  }
++ }
++ @Override public boolean performClick(){return super.performClick();}
++ private static boolean seekAt(View view,float x,float y){
++  if(view.getVisibility()!=View.VISIBLE||x<0||y<0||x>=view.getWidth()||y>=view.getHeight())return false;
++  if(view instanceof SeekBar)return true;
++  if(view instanceof ViewGroup){ViewGroup group=(ViewGroup)view;for(int i=group.getChildCount()-1;i>=0;i--){View child=group.getChildAt(i);if(seekAt(child,x+group.getScrollX()-child.getX(),y+group.getScrollY()-child.getY()))return true;}}
++  return false;
++ }
++}
+--- a/app/src/test/java/app/volna/direct/SwipeDispatchTest.java
++++ b/app/src/test/java/app/volna/direct/SwipeDispatchTest.java
+@@ -0,0 +1,31 @@
++package app.volna.direct;
++import android.app.Activity;
++import android.os.Looper;
++import android.view.*;
++import android.widget.*;
++import java.util.*;
++import org.junit.*;
++import org.junit.runner.RunWith;
++import org.robolectric.*;
++import org.robolectric.annotation.Config;
++import static org.junit.Assert.*;
++
++/** Android View/MotionEvent dispatch via Robolectric; not a physical device or emulator test. */
++@RunWith(RobolectricTestRunner.class)
++@Config(sdk=28,manifest=Config.NONE,application=android.app.Application.class)
++public class SwipeDispatchTest {
++ Activity activity;TrackSwipeLayout layout;final List<Integer> actions=new ArrayList<>();int clicks;float density;
++ @Before public void setup(){activity=Robolectric.buildActivity(Activity.class).setup().get();layout=new TrackSwipeLayout(activity,actions::add);layout.setOrientation(LinearLayout.VERTICAL);density=activity.getResources().getDisplayMetrics().density;activity.setContentView(layout);}
++ private void arrange(){int w=(int)(400*density),h=(int)(500*density);layout.measure(View.MeasureSpec.makeMeasureSpec(w,View.MeasureSpec.EXACTLY),View.MeasureSpec.makeMeasureSpec(h,View.MeasureSpec.EXACTLY));layout.layout(0,0,w,h);}
++ private void event(int type,float x,float y,long when){MotionEvent e=MotionEvent.obtain(100,when,type,x*density,y*density,0);layout.dispatchTouchEvent(e);e.recycle();Shadows.shadowOf(Looper.getMainLooper()).idle();}
++ private void swipe(float from,float to){event(MotionEvent.ACTION_DOWN,from,80,100);event(MotionEvent.ACTION_MOVE,(from+to)/2,82,200);event(MotionEvent.ACTION_UP,to,83,300);}
++ @Test public void leftAndRightExactlyOnce(){arrange();event(0,300,80,100);event(2,180,82,200);assertTrue(actions.isEmpty());event(1,80,83,300);assertEquals(Arrays.asList(TrackSwipe.NEXT),actions);swipe(80,300);assertEquals(Arrays.asList(TrackSwipe.NEXT,TrackSwipe.PREVIOUS),actions);}
++ @Test public void childTapStillClicks(){Button button=new Button(activity);button.setOnClickListener(v->clicks++);layout.addView(button,new LinearLayout.LayoutParams(-1,(int)(120*density)));arrange();event(0,200,60,100);event(1,201,61,150);assertEquals(1,clicks);assertTrue(actions.isEmpty());}
++ @Test public void swipeCancelsChildClick(){Button button=new Button(activity);button.setOnClickListener(v->clicks++);layout.addView(button,new LinearLayout.LayoutParams(-1,(int)(120*density)));arrange();swipe(300,80);assertEquals(Arrays.asList(TrackSwipe.NEXT),actions);assertEquals(0,clicks);}
++ @Test public void shortDragDoesNotOpenMiniPlayer(){layout.setOnClickListener(v->clicks++);arrange();event(0,250,80,100);event(2,220,80,200);event(1,219,80,300);assertEquals(0,clicks);assertTrue(actions.isEmpty());}
++ @Test public void dragBackDoesNotOpenMiniPlayer(){layout.setOnClickListener(v->clicks++);arrange();event(0,250,80,100);event(2,180,80,200);event(1,249,80,300);assertEquals(0,clicks);assertTrue(actions.isEmpty());}
++ @Test public void miniTapOpensPlayer(){layout.setOnClickListener(v->clicks++);arrange();event(0,200,80,100);event(1,201,81,160);assertEquals(1,clicks);assertTrue(actions.isEmpty());}
++ @Test public void verticalAndCancelledGesturesDoNotSkip(){arrange();event(0,200,80,100);event(2,210,200,200);event(1,210,250,300);assertTrue(actions.isEmpty());event(0,300,80,100);event(2,180,82,200);event(3,80,83,300);assertTrue(actions.isEmpty());}
++ @Test public void seekBarKeepsHorizontalDrag(){SeekBar seek=new SeekBar(activity);seek.setMax(100);layout.addView(seek,new LinearLayout.LayoutParams(-1,(int)(120*density)));arrange();event(0,80,60,100);event(2,180,60,200);event(1,300,60,300);assertTrue(actions.isEmpty());assertTrue(seek.getProgress()>0);}
++ @Test public void secondPointerCancelsSkip(){arrange();event(0,300,80,100);event(2,180,82,200);MotionEvent.PointerProperties[] pp={new MotionEvent.PointerProperties(),new MotionEvent.PointerProperties()};MotionEvent.PointerCoords[] pc={new MotionEvent.PointerCoords(),new MotionEvent.PointerCoords()};for(int j=0;j<2;j++){pp[j].id=j;pp[j].toolType=MotionEvent.TOOL_TYPE_FINGER;pc[j].x=(180+j*30)*density;pc[j].y=82*density;pc[j].pressure=1;pc[j].size=1;}MotionEvent e=MotionEvent.obtain(100,240,MotionEvent.ACTION_POINTER_DOWN|(1<<MotionEvent.ACTION_POINTER_INDEX_SHIFT),2,pp,pc,0,0,1,1,0,0,android.view.InputDevice.SOURCE_TOUCHSCREEN,0);layout.dispatchTouchEvent(e);e.recycle();event(1,80,83,300);assertTrue(actions.isEmpty());}
++}
+--- a/app/src/test/java/app/volna/direct/WarmWriterTest.java
++++ b/app/src/test/java/app/volna/direct/WarmWriterTest.java
+@@ -0,0 +1,57 @@
++package app.volna.direct;
++import android.app.Activity;
++import android.content.Intent;
++import android.os.Looper;
++import android.webkit.*;
++import java.security.*;
++import java.security.cert.Certificate;
++import java.util.*;
++import java.io.*;
++import java.time.Duration;
++import javax.crypto.spec.SecretKeySpec;
++import org.json.JSONObject;
++import org.junit.*;
++import org.junit.runner.RunWith;
++import org.robolectric.*;
++import org.robolectric.annotation.Config;
++import static org.junit.Assert.*;
++
++/** Real AccountWriter lifecycle with synthetic WebView/JS replies; no live account or measured network latency. */
++@RunWith(RobolectricTestRunner.class)
++@Config(sdk=28,manifest=Config.NONE,application=android.app.Application.class)
++public class WarmWriterTest {
++ static final String TOKEN="OAuth SYNTHETIC_WARM_TOKEN_12345",CLIENT="SYNTHETIC_WARM_CLIENT_12345";
++ Activity activity;AccountWriter writer;final List<FakeWeb> browsers=new ArrayList<>();final List<Intent> done=new ArrayList<>();final List<String> failures=new ArrayList<>();boolean deny;
++ public static class MemoryStore extends KeyStoreSpi {
++  public Key engineGetKey(String a,char[] p){return new SecretKeySpec(new byte[32],"AES");}
++  public Certificate[] engineGetCertificateChain(String a){return null;}public Certificate engineGetCertificate(String a){return null;}public Date engineGetCreationDate(String a){return new Date(0);}
++  public void engineSetKeyEntry(String a,Key k,char[] p,Certificate[] c){}public void engineSetKeyEntry(String a,byte[] k,Certificate[] c){}public void engineSetCertificateEntry(String a,Certificate c){}public void engineDeleteEntry(String a){}
++  public Enumeration<String> engineAliases(){return Collections.enumeration(Collections.singletonList("volna_session"));}public boolean engineContainsAlias(String a){return true;}public int engineSize(){return 1;}public boolean engineIsKeyEntry(String a){return true;}public boolean engineIsCertificateEntry(String a){return false;}public String engineGetCertificateAlias(Certificate c){return null;}public void engineStore(OutputStream o,char[] p){}public void engineLoad(InputStream i,char[] p){}
++ }
++ class FakeWeb extends WebView {
++  int loads,scripts;String url="";boolean destroyed;String lastScript="";
++  FakeWeb(){super(activity);}
++  @Override public void loadUrl(String value){loads++;url=value;getWebViewClient().onPageStarted(this,value,null);getWebViewClient().onPageFinished(this,value);}
++  @Override public String getUrl(){return url;}
++  @Override public void evaluateJavascript(String js,ValueCallback<String> callback){
++   if(js.startsWith("(window.__sc_hydration")){if(callback!=null)callback.onReceiveValue(JSONObject.quote(CLIENT));}
++   else if(js.startsWith("(function()")){scripts++;lastScript=js;}
++   else if(js.startsWith("JSON.stringify")){if(callback!=null)callback.onReceiveValue(JSONObject.quote(deny?"{\"ok\":false,\"status\":403,\"reason\":\"HTTP\"}":"{\"ok\":true,\"status\":204,\"playlist_id\":\"77\"}"));}
++  }
++  @Override public void destroy(){destroyed=true;super.destroy();}
++ }
++ @Before public void setup()throws Exception{
++  Provider provider=new Provider("VolnaSyntheticKeyStore",1.0,"Test-only in-memory key store"){};provider.put("KeyStore.AndroidKeyStore",MemoryStore.class.getName());Security.insertProviderAt(provider,1);
++  activity=Robolectric.buildActivity(Activity.class).setup().get();activity.getSharedPreferences("profile",0).edit().putString("id","123").commit();Session.put(activity,TOKEN,CLIENT);
++  writer=new AccountWriter(activity,new AccountWriter.Callback(){public void complete(Intent result){done.add(result);}public void failed(int status,String reason,boolean verification){failures.add(reason);}}){@Override protected WebView createWebView(){FakeWeb w=new FakeWeb();browsers.add(w);return w;}};
++ }
++ @After public void cleanup(){writer.close();activity.finish();Security.removeProvider("VolnaSyntheticKeyStore");}
++ private void tick(){Shadows.shadowOf(Looper.getMainLooper()).idleFor(Duration.ofMillis(90));}
++ @Test public void warmDoesNotWriteOrReportSuccess(){writer.warm();assertEquals(1,browsers.size());assertEquals(1,browsers.get(0).loads);assertEquals(0,browsers.get(0).scripts);assertFalse(writer.busy());assertTrue(done.isEmpty());assertTrue(failures.isEmpty());}
++ @Test public void secondOperationReusesOnePageAndUsesNewArguments(){writer.warm();assertTrue(writer.submit("LIKE","456","",""));tick();assertEquals(1,done.size());assertEquals("LIKE",done.get(0).getStringExtra("op"));assertTrue(writer.submit("UNLIKE","789","",""));tick();assertEquals(1,browsers.size());assertEquals(1,browsers.get(0).loads);assertEquals(2,browsers.get(0).scripts);assertEquals("UNLIKE",done.get(1).getStringExtra("op"));assertEquals("789",done.get(1).getStringExtra("track"));assertTrue(browsers.get(0).lastScript.contains("const me=await call('/me')"));}
++ @Test public void duplicateTapDoesNotDoubleWrite(){assertTrue(writer.submit("LIKE","456","",""));assertFalse(writer.submit("LIKE","456","",""));tick();assertEquals(1,browsers.get(0).scripts);assertEquals(1,done.size());}
++ @Test public void failureIsNotReplayedAndNextExplicitOperationStartsFresh(){writer.warm();deny=true;writer.submit("LIKE","456","","");tick();assertEquals(Arrays.asList("HTTP"),failures);assertTrue(done.isEmpty());assertEquals(1,browsers.get(0).scripts);assertTrue(browsers.get(0).destroyed);deny=false;writer.submit("UNLIKE","456","","");tick();assertEquals(2,browsers.size());assertEquals(1,done.size());}
++ @Test public void closePreventsFurtherWrites(){writer.warm();writer.close();assertTrue(browsers.get(0).destroyed);assertFalse(writer.submit("LIKE","456","",""));writer.warm();assertEquals(1,browsers.size());assertTrue(done.isEmpty());}
++ @Test public void ownerChangeDropsOldBrowser(){writer.warm();activity.getSharedPreferences("profile",0).edit().putString("id","999").commit();writer.warm();assertTrue(browsers.get(0).destroyed);assertEquals(2,browsers.size());assertEquals(0,browsers.get(1).scripts);}
++ @Test public void signedOutWarmDoesNothing(){Session.clear(activity);writer.warm();assertTrue(browsers.isEmpty());assertTrue(done.isEmpty());}
++}

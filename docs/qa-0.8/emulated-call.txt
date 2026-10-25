@@ -1,0 +1,35 @@
+status: exited
+exit_code: 0
+exec_session_id: cmd_310c26dbd2a24cf28489c10d07db
+stdout_offset: 1283
+stderr_offset: 0
+timed_out: false
+truncated: false
+
+stdout:
+BEFORE CALL
+  Media button session is com.farika.soundflow/Volna (userId=0)
+    Volna com.farika.soundflow/Volna (userId=0)
+      active=true
+      state=PlaybackState {state=3, position=12000, buffered position=0, speed=1.0, updated=532218, actions=823, custom actions=[], active item id=-1, error=null}
+OK
+RINGING
+  Media button session is com.farika.soundflow/Volna (userId=0)
+    Volna com.farika.soundflow/Volna (userId=0)
+      active=true
+      state=PlaybackState {state=2, position=20601, buffered position=0, speed=0.0, updated=540729, actions=823, custom actions=[], active item id=-1, error=null}
+OK
+ACTIVE CALL
+  Media button session is com.farika.soundflow/Volna (userId=0)
+    Volna com.farika.soundflow/Volna (userId=0)
+      active=true
+      state=PlaybackState {state=2, position=20601, buffered position=0, speed=0.0, updated=540729, actions=823, custom actions=[], active item id=-1, error=null}
+OK
+AFTER CALL
+  Media button session is com.farika.soundflow/Volna (userId=0)
+    Volna com.farika.soundflow/Volna (userId=0)
+      active=true
+      state=PlaybackState {state=3, position=20608, buffered position=0, speed=1.0, updated=545281, actions=823, custom actions=[], active item id=-1, error=null}
+
+
+stderr:

@@ -1,0 +1,17 @@
+{
+  "scope": "Robolectric Android framework simulation, not a phone/emulator or live SoundCloud account. AccountWriter WebView/JS responses synthetic.",
+  "suites": [
+    {
+      "suite": "com.farika.soundflow.SwipeDispatchTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0
+    },
+    {
+      "suite": "com.farika.soundflow.WarmWriterTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0
+    }
+  ]
+}

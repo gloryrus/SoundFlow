@@ -1,0 +1,12 @@
+INSTRUMENTATION_RESULT: fresh_launch_is_home=PASS
+INSTRUMENTATION_RESULT: genuinely_different_process=PASS
+INSTRUMENTATION_RESULT: fresh_process_does_not_restart_music=PASS
+INSTRUMENTATION_RESULT: checks=9
+INSTRUMENTATION_RESULT: fresh_process_preserves_account=PASS
+INSTRUMENTATION_RESULT: fresh_process_preserves_audio_file=PASS
+INSTRUMENTATION_RESULT: scope=Synthetic data; fresh-seed/check intended around explicit external Android force-stop; no real SoundCloud credentials
+INSTRUMENTATION_RESULT: home_launch_no_autoplay=PASS
+INSTRUMENTATION_RESULT: fresh_process_preserves_offline_record=PASS
+INSTRUMENTATION_RESULT: fresh_process_has_no_old_queue_or_seek=PASS
+INSTRUMENTATION_RESULT: fresh_process_preserves_authorization=PASS
+INSTRUMENTATION_CODE: -1

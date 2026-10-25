@@ -1,0 +1,8 @@
+Volna Lab 0.6.0-wave / versionCode 2
+applicationId: com.farika.soundflow
+minSdk 26 / targetSdk 35 / compileSdk 35
+JDK 21 / Gradle 8.9 / Android Gradle Plugin 8.7.3 / Media3 1.5.1
+In-place update over Lab 0.5 using the same signing certificate.
+Expected certificate SHA256: 38221e367706f5b3f1965b6420ce1bc5e18c7830d187f5208e110fd4261f6fa4
+Real SoundCloud write/DRM-license acceptance not tested.
+Public source excludes private signing credentials.

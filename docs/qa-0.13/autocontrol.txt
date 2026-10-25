@@ -1,0 +1,19 @@
+INSTRUMENTATION_RESULT: network_retry_is_durable=PASS
+INSTRUMENTATION_RESULT: pending_track_not_started_or_marked_ready=PASS
+INSTRUMENTATION_RESULT: checks=16
+INSTRUMENTATION_RESULT: disable_cancels_network_retry_job=PASS
+INSTRUMENTATION_RESULT: disabled_flag_persisted=PASS
+INSTRUMENTATION_RESULT: reenable=PASS
+INSTRUMENTATION_RESULT: network_retry_job_scheduled=PASS
+INSTRUMENTATION_RESULT: disable_stops_before_next_track=PASS
+INSTRUMENTATION_RESULT: disable_cancels_automatic_scheduling=PASS
+INSTRUMENTATION_RESULT: scope=Synthetic data; fresh-seed/check intended around explicit external Android force-stop; no real SoundCloud credentials
+INSTRUMENTATION_RESULT: retry_respects_wifi_preference=PASS
+INSTRUMENTATION_RESULT: toggle_on=PASS
+INSTRUMENTATION_RESULT: disable_never_deletes_saved_bytes=PASS
+INSTRUMENTATION_RESULT: retry_respects_backoff=PASS
+INSTRUMENTATION_RESULT: single_retry_preserves_other_pending_tracks=PASS
+INSTRUMENTATION_RESULT: old_job_cannot_revive_after_rapid_off_on=PASS
+INSTRUMENTATION_RESULT: disable_keeps_completed_audio=PASS
+INSTRUMENTATION_RESULT: single_retry_updates_shared_playlist_counter=PASS
+INSTRUMENTATION_CODE: -1

@@ -1,0 +1,3 @@
+    mFocusedApp=Token{e98e157 ActivityRecord{f826ad6 u0 com.android.launcher3/.Launcher t17}}
+  mCurrentFocus=null
+  mFocusedApp=AppWindowToken{52adb29 token=Token{e98e157 ActivityRecord{f826ad6 u0 com.android.launcher3/.Launcher t17}}}

@@ -1,0 +1,16 @@
+Note: tests/OriginalTransferTest.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+AuthCapture: 28 checks passed; no network used
+StreamPolicy: 31 checks passed; no network or real tokens used
+RecommendationRanker: 13 checks passed; synthetic data only
+EqKernel: 11 checks passed; deterministic PCM, no network
+FocusIntent: 11 checks passed
+ApiRefusal: 9 checks passed
+RestartPolicy: 8 checks passed
+TlsFirstFlight: 17 checks passed
+Account browser script: 40 checks passed (stub fetch only, no real account)
+Challenge script: 16 origin/source/cookie checks passed; synthetic events only
+OriginalTransfer: 37 checks passed; actual loopback HTTP only, authorized-original transfer contract
+AutoDownloadGate: 6 checks passed; rapid off/on invalidates only the original plan run
+AccountBrowserProfileTest: 25 PASS
+TrackSwipeTest: 23 checks passed

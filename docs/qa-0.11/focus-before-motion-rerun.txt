@@ -1,0 +1,2 @@
+  mCurrentFocus=Window{2506d54 u0 Application Not Responding: com.android.systemui}
+  mFocusedApp=AppWindowToken{52adb29 token=Token{e98e157 ActivityRecord{f826ad6 u0 com.android.launcher3/.Launcher t17}}}

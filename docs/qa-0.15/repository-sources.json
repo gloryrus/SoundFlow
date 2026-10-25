@@ -1,0 +1,37 @@
+[
+  {
+    "repo": "savo-o/resona",
+    "revision": "0adbfd121e049c9cf9fbed08d3a32f51d73edf4d",
+    "path": "app/src/main/java/com/savoo/scclient/data/remote/WebViewApiBridge.kt",
+    "url": "https://github.com/savo-o/resona/blob/0adbfd121e049c9cf9fbed08d3a32f51d73edf4d/app/src/main/java/com/savoo/scclient/data/remote/WebViewApiBridge.kt",
+    "bytes": 14319
+  },
+  {
+    "repo": "Jomvet-lovers/soundcloud-desktop",
+    "revision": "248943cfc440a375f8de40c7d40df6ccc8f9930b",
+    "path": "desktop/src-tauri/src/direct/webview/mod.rs",
+    "url": "https://github.com/Jomvet-lovers/soundcloud-desktop/blob/248943cfc440a375f8de40c7d40df6ccc8f9930b/desktop/src-tauri/src/direct/webview/mod.rs",
+    "bytes": 15366
+  },
+  {
+    "repo": "quantm-app/Quantm",
+    "revision": "7c96c47a384db9192822a2c5980a6b1ae809d626",
+    "path": "offline.js",
+    "url": "https://github.com/quantm-app/Quantm/blob/7c96c47a384db9192822a2c5980a6b1ae809d626/offline.js",
+    "bytes": 10352
+  },
+  {
+    "repo": "TeamNewPipe/NewPipeExtractor",
+    "revision": "711f13b15be314286a0e0a019302ad540c8f0ed7",
+    "path": "extractor/src/main/java/org/schabi/newpipe/extractor/services/soundcloud/extractors/SoundcloudStreamExtractor.java",
+    "url": "https://github.com/TeamNewPipe/NewPipeExtractor/blob/711f13b15be314286a0e0a019302ad540c8f0ed7/extractor/src/main/java/org/schabi/newpipe/extractor/services/soundcloud/extractors/SoundcloudStreamExtractor.java",
+    "bytes": 12141
+  },
+  {
+    "repo": "yt-dlp/yt-dlp",
+    "revision": "fa9886678eb65103303c627b8e013f13f8999b41",
+    "path": "yt_dlp/extractor/soundcloud.py",
+    "url": "https://github.com/yt-dlp/yt-dlp/blob/fa9886678eb65103303c627b8e013f13f8999b41/yt_dlp/extractor/soundcloud.py",
+    "bytes": 59020
+  }
+]

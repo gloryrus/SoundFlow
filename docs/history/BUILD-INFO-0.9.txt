@@ -1,0 +1,8 @@
+Volna Lab0.9.0-motion / versionCode5
+applicationId: com.farika.soundflow
+minSdk26 / targetSdk35 / compileSdk35
+JDK21 / Gradle8.9 / AGP8.7.3 / Media3 1.5.1
+In-place update over Lab0.5–0.8; same certificate.
+Expected certificate SHA256: 38221e367706f5b3f1965b6420ce1bc5e18c7830d187f5208e110fd4261f6fa4
+Real account writes and SoundCloud offline-license issuance NOT verified.
+Public source excludes signing credentials.

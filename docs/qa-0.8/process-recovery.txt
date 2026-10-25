@@ -1,0 +1,14 @@
+Success
+INSTRUMENTATION_RESULT: native_playback_before_interruption=PASS
+INSTRUMENTATION_RESULT: phase=checkpoint seeded for external process kill
+INSTRUMENTATION_CODE: -1
+INSTRUMENTATION_RESULT: process_death_position_durable=PASS
+INSTRUMENTATION_RESULT: checks=8
+INSTRUMENTATION_RESULT: normal_open_does_not_autoplay_or_start_service=PASS
+INSTRUMENTATION_RESULT: process_death_queue_index_duplicates=PASS
+INSTRUMENTATION_RESULT: restore_seek_preserved=PASS
+INSTRUMENTATION_RESULT: process_death_modes_durable=PASS
+INSTRUMENTATION_RESULT: restore_prepares_paused=PASS
+INSTRUMENTATION_RESULT: explicit_resume_after_process_death=PASS
+INSTRUMENTATION_RESULT: saved_track_visible_after_process_death=PASS
+INSTRUMENTATION_CODE: -1

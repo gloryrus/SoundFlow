@@ -1,0 +1,45 @@
+{
+  "id": 2413615341,
+  "title": "Так Манят Облака (Bass Boosted)",
+  "downloadable": false,
+  "streamable": true,
+  "policy": "MONETIZE",
+  "duration": 140506,
+  "full_duration": 140460,
+  "formats": [
+    {
+      "snipped": false,
+      "duration": 140506,
+      "quality": "sq",
+      "format": {
+        "protocol": "hls",
+        "mime_type": "audio/mp4; codecs=\"mp4a.40.2\""
+      }
+    },
+    {
+      "snipped": false,
+      "duration": 140506,
+      "quality": "lq",
+      "format": {
+        "protocol": "hls",
+        "mime_type": "audio/mp4; codecs=\"mp4a.40.2\""
+      }
+    },
+    {
+      "snipped": false,
+      "duration": 140506,
+      "quality": "sq",
+      "format": {
+        "protocol": "hls",
+        "mime_type": "audio/mpegurl"
+      }
+    }
+  ],
+  "manifest_check": {
+    "hls": true,
+    "endlist": true,
+    "segments": 15,
+    "encryption_tags": [],
+    "duration_seconds": 140.506842
+  }
+}

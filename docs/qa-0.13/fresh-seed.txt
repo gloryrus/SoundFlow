@@ -1,0 +1,5 @@
+INSTRUMENTATION_RESULT: checks=2
+INSTRUMENTATION_RESULT: seed_queue_and_position_are_durable_before_stop=PASS
+INSTRUMENTATION_RESULT: scope=Synthetic data; fresh-seed/check intended around explicit external Android force-stop; no real SoundCloud credentials
+INSTRUMENTATION_RESULT: seed_real_local_audio_playing=PASS
+INSTRUMENTATION_CODE: -1

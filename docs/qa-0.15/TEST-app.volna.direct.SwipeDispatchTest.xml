@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.farika.soundflow.SwipeDispatchTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-24T22:52:24" hostname="85afb0ec-449" time="5.273">
+  <properties/>
+  <testcase name="leftAndRightExactlyOnce" classname="com.farika.soundflow.SwipeDispatchTest" time="3.701"/>
+  <testcase name="miniTapOpensPlayer" classname="com.farika.soundflow.SwipeDispatchTest" time="0.116"/>
+  <testcase name="dragBackDoesNotOpenMiniPlayer" classname="com.farika.soundflow.SwipeDispatchTest" time="0.085"/>
+  <testcase name="childTapStillClicks" classname="com.farika.soundflow.SwipeDispatchTest" time="0.405"/>
+  <testcase name="shortDragDoesNotOpenMiniPlayer" classname="com.farika.soundflow.SwipeDispatchTest" time="0.095"/>
+  <testcase name="seekBarKeepsHorizontalDrag" classname="com.farika.soundflow.SwipeDispatchTest" time="0.429"/>
+  <testcase name="verticalAndCancelledGesturesDoNotSkip" classname="com.farika.soundflow.SwipeDispatchTest" time="0.129"/>
+  <testcase name="secondPointerCancelsSkip" classname="com.farika.soundflow.SwipeDispatchTest" time="0.128"/>
+  <testcase name="swipeCancelsChildClick" classname="com.farika.soundflow.SwipeDispatchTest" time="0.182"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

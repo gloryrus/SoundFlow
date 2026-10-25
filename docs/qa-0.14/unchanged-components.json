@@ -1,0 +1,47 @@
+[
+  {
+    "file": "OfflineStore.java",
+    "identical_to_0_13": true,
+    "sha256": "10c102f9f979e3c3627706ad48d843910aa282fda4d532c41a1de949d5a705c6"
+  },
+  {
+    "file": "OriginalTransfer.java",
+    "identical_to_0_13": true,
+    "sha256": "44ce11c1f73e255295fccf79f70ca9ad4eaaffd7380cd66080ede77c43cc803a"
+  },
+  {
+    "file": "AutoDownloadGate.java",
+    "identical_to_0_13": true,
+    "sha256": "fe89026f74e4ba6c070988008d9d3a268de997cb715c70d4fe8a6d6a4bc25978"
+  },
+  {
+    "file": "AutoDownloads.java",
+    "identical_to_0_13": true,
+    "sha256": "008bf800abf62ced0e826a6658723b9665c5ace30a1c529843423c2819b63e86"
+  },
+  {
+    "file": "AutoDownloadJob.java",
+    "identical_to_0_13": true,
+    "sha256": "2c4ff8c3a6ff0fa1e6e03a421d76d6dcb5336eda0d7732ccc0fb0646c223af17"
+  },
+  {
+    "file": "DownloadSync.java",
+    "identical_to_0_13": true,
+    "sha256": "a6078f799af73dbe7cb63b56e964d529738028a50832b1e82127004ac754bc66"
+  },
+  {
+    "file": "SoundFlowApplication.java",
+    "identical_to_0_13": true,
+    "sha256": "8a335c2287ac3228646b2b4c8c6b9a64d8d9c057ec9c7b6753bb73f01c8d7da3"
+  },
+  {
+    "file": "PlaybackService.java",
+    "identical_to_0_13": true,
+    "sha256": "7e44bdf32010070dd66a6ae82e4cefb8fbd0249859a5fb7084770ee12e14490d"
+  },
+  {
+    "file": "PlaybackCheckpoint.java",
+    "identical_to_0_13": true,
+    "sha256": "9d0205c66cce30f2970e473cbc8f74145628c96a66705fb605be87125321b937"
+  }
+]

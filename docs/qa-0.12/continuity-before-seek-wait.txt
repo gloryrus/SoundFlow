@@ -1,0 +1,3 @@
+INSTRUMENTATION_RESULT: failure=AssertionError: activity_destroy_does_not_stop_audio
+INSTRUMENTATION_RESULT: active_resume_intent_durable=PASS
+INSTRUMENTATION_CODE: 0

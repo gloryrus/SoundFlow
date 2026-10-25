@@ -1,0 +1,4 @@
+Release APK verified by Android apksigner.
+Package com.farika.soundflow / versionCode4 / versionName0.8.0-resume
+Certificate SHA256 38221e367706f5b3f1965b6420ce1bc5e18c7830d187f5208e110fd4261f6fa4
+Matches existing Lab0.5–0.7 signing certificate.

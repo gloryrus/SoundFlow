@@ -1,0 +1,7 @@
+Abrupt process kill with active native playback
+old_pid=3686
+      active=true
+      state=PlaybackState {state=3, position=160, buffered position=0, speed=1.0, updated=585896, actions=823, custom actions=[], active item id=-1, error=null}
+new_pid=3849
+      active=true
+      state=PlaybackState {state=2, position=10915, buffered position=0, speed=0.0, updated=606500, actions=823, custom actions=[], active item id=-1, error=null}
